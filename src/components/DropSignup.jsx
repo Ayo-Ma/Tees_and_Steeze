@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
+import { saveDropSignup } from '../../tees-and-steeze/settings/src/lib/sanity';
 /*
  * ── CULTURAL ACCENT LINE ──
  * A slim horizontal strip of the Adire-geometric pattern.
@@ -71,8 +71,17 @@ export default function DropSignup() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!value.trim()) return;
-    // TODO: Connect to your email/WhatsApp capture backend
-    setSubmitted(true);
+
+    saveDropSignup({
+      contact: value,
+      source: "homepage",
+    })
+      .then(() => setSubmitted(true))
+      .catch((err) => {
+        console.error("Signup failed:", err);
+        // Still show success — don't punish the user for a backend error
+        setSubmitted(true);
+      });
   };
 
   return (

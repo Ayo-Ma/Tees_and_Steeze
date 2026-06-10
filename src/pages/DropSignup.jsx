@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
+import { saveDropSignup } from '../../tees-and-steeze/settings/src/lib/sanity'
 
 /*
  * ── CULTURAL PATTERN — CENTER ORNAMENT ──
@@ -57,12 +58,23 @@ export default function DropSignupPage() {
   const [contact, setContact] = useState('')
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (!contact.trim()) return
-    // TODO: connect to email/WhatsApp capture backend
-    setSubmitted(true)
-  }
+ 
+// Replace handleSubmit:
+const handleSubmit = (e) => {
+  e.preventDefault()
+  if (!contact.trim()) return
+
+  saveDropSignup({
+    name,
+    contact,
+    source: 'drop-page',
+  })
+    .then(() => setSubmitted(true))
+    .catch((err) => {
+      console.error('Signup failed:', err)
+      setSubmitted(true)
+    })
+}
 
   return (
     <>

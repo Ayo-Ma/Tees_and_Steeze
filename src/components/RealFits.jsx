@@ -192,6 +192,7 @@ export default function RealFits() {
     "Real people. Real fits. No casting calls.",
   );
 
+
   useEffect(() => {
     getHomepage()
       .then((data) => {
@@ -216,8 +217,8 @@ export default function RealFits() {
     return () => observer.disconnect();
   }, []);
 
-  // Don't render if no UGC images
-  if (ugcImages.length === 0) return null;
+  const FALLBACK_IMAGES = Array(6).fill({ src: "/hero.jpg" });
+  const displayImages = ugcImages.length > 0 ? ugcImages : FALLBACK_IMAGES;
 
   return (
     <section aria-label="Community" className="section">
@@ -249,7 +250,7 @@ export default function RealFits() {
                   : "95%",
           }}
         >
-          {ugcImages.slice(0, 6).map((image, i) => (
+          {displayImages.slice(0, 6).map((image, i) => (
             <UGCImage
               key={i}
               image={image}
@@ -259,7 +260,7 @@ export default function RealFits() {
           ))}
         </div>
         <div className="block md:hidden">
-          <MobileUGCGrid images={ugcImages.slice(0, 6)} />
+          <MobileUGCGrid images={displayImages.slice(0, 6)} />
         </div>
       </div>
     </section>

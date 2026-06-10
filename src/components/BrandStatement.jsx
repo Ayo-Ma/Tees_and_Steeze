@@ -1,19 +1,14 @@
-import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { getHomepage, urlFor } from "../../tees-and-steeze/settings/src/lib/sanity";
 
-/*
- * ── CULTURAL PATTERN SVG ──
- * Geometric grid with Adire-inspired circular/diamond motifs overlaid.
- * Used as section dividers and image overlay.
- * Pure SVG — no image files needed.
- */
-const CulturalPatternDivider = ({ className = '', flip = false }) => (
+const CulturalPatternDivider = ({ className = "", flip = false }) => (
   <div
     className={`w-full overflow-hidden ${className}`}
     style={{
-      height: '64px',
+      height: "64px",
       opacity: 0.45,
-      transform: flip ? 'scaleY(-1)' : 'none',
+      transform: flip ? "scaleY(-1)" : "none",
     }}
   >
     <svg
@@ -24,17 +19,20 @@ const CulturalPatternDivider = ({ className = '', flip = false }) => (
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      {/* Horizontal grid lines */}
       <line x1="0" y1="12" x2="1200" y2="12" stroke="#F5F4F0" strokeWidth="1" />
       <line x1="0" y1="24" x2="1200" y2="24" stroke="#F5F4F0" strokeWidth="1" />
       <line x1="0" y1="36" x2="1200" y2="36" stroke="#F5F4F0" strokeWidth="1" />
-
-      {/* Vertical grid — every 60px */}
       {Array.from({ length: 21 }, (_, i) => (
-        <line key={`v-${i}`} x1={i * 60} y1="0" x2={i * 60} y2="48" stroke="#F5F4F0" strokeWidth="1" />
+        <line
+          key={`v-${i}`}
+          x1={i * 60}
+          y1="0"
+          x2={i * 60}
+          y2="48"
+          stroke="#F5F4F0"
+          strokeWidth="1"
+        />
       ))}
-
-      {/* Adire-inspired motifs — concentric circles at intersections */}
       {[120, 360, 600, 840, 1080].map((cx) => (
         <g key={`circle-${cx}`}>
           <circle cx={cx} cy="24" r="10" stroke="#F5F4F0" strokeWidth="1" />
@@ -42,8 +40,6 @@ const CulturalPatternDivider = ({ className = '', flip = false }) => (
           <circle cx={cx} cy="24" r="3" fill="#F5F4F0" />
         </g>
       ))}
-
-      {/* Diamond / rhombus motifs between circles */}
       {[240, 480, 720, 960].map((cx) => (
         <g key={`diamond-${cx}`}>
           <polygon
@@ -60,13 +56,8 @@ const CulturalPatternDivider = ({ className = '', flip = false }) => (
       ))}
     </svg>
   </div>
-)
+);
 
-/*
- * ── CULTURAL PATTERN OVERLAY FOR IMAGE ──
- * Denser version layered on top of the lifestyle photo.
- * Creates the feeling of culture printed onto the image.
- */
 const CulturalImageOverlay = () => (
   <div
     className="absolute inset-0 z-10 pointer-events-none"
@@ -80,18 +71,39 @@ const CulturalImageOverlay = () => (
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      {/* Grid */}
       {Array.from({ length: 16 }, (_, i) => (
-        <line key={`h-${i}`} x1="0" y1={i * 40} x2="400" y2={i * 40} stroke="#F5F4F0" strokeWidth="1" />
+        <line
+          key={`h-${i}`}
+          x1="0"
+          y1={i * 40}
+          x2="400"
+          y2={i * 40}
+          stroke="#F5F4F0"
+          strokeWidth="1"
+        />
       ))}
       {Array.from({ length: 11 }, (_, i) => (
-        <line key={`v-${i}`} x1={i * 40} y1="0" x2={i * 40} y2="600" stroke="#F5F4F0" strokeWidth="1" />
+        <line
+          key={`v-${i}`}
+          x1={i * 40}
+          y1="0"
+          x2={i * 40}
+          y2="600"
+          stroke="#F5F4F0"
+          strokeWidth="1"
+        />
       ))}
-
-      {/* Adire concentric circles — scattered */}
       {[
-        [80, 80], [200, 160], [320, 80], [120, 280], [280, 320],
-        [40, 440], [200, 480], [360, 400], [160, 560], [320, 560],
+        [80, 80],
+        [200, 160],
+        [320, 80],
+        [120, 280],
+        [280, 320],
+        [40, 440],
+        [200, 480],
+        [360, 400],
+        [160, 560],
+        [320, 560],
       ].map(([cx, cy], i) => (
         <g key={`motif-${i}`}>
           <circle cx={cx} cy={cy} r="16" stroke="#F5F4F0" strokeWidth="1" />
@@ -100,10 +112,8 @@ const CulturalImageOverlay = () => (
           <circle cx={cx} cy={cy} r="2.5" fill="#F5F4F0" />
         </g>
       ))}
-
-      {/* Diamond chain — vertical center */}
       {Array.from({ length: 8 }, (_, i) => {
-        const cy = 40 + i * 70
+        const cy = 40 + i * 70;
         return (
           <g key={`chain-${i}`}>
             <polygon
@@ -112,134 +122,174 @@ const CulturalImageOverlay = () => (
               strokeWidth="1"
             />
           </g>
-        )
+        );
       })}
     </svg>
   </div>
-)
+);
+
+// Default copy — used before Sanity loads or if fields are empty
+const DEFAULTS = {
+  headline: "Every piece carries something.",
+  body: [
+    "Tee's and Steeze didn't start as a business plan. It started as a refusal — a refusal to wear what everyone else was wearing, to dress the way the market told us to dress, to build a brand that looked like every other brand.",
+    "Three years ago, one idea: make pieces that carry something. Not just fabric. Not just a print. The steeze — the confidence and energy you feel the moment you put it on. That feeling isn't designed in a boardroom. It's built from conviction.",
+  ],
+  closing:
+    "Every piece has a story. Every fit has a steeze.\nThat's why we're here.",
+  image: "/hero.jpg",
+};
 
 export default function BrandStatement() {
-  const sectionRef = useRef(null)
-  const [visible, setVisible] = useState(false)
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [headline, setHeadline] = useState(DEFAULTS.headline);
+  const [bodyParagraphs, setBodyParagraphs] = useState(DEFAULTS.body);
+  const [closing, setClosing] = useState(DEFAULTS.closing);
+  const [imageUrl, setImageUrl] = useState(DEFAULTS.image);
+
+  useEffect(() => {
+    getHomepage()
+      .then((data) => {
+        if (data) {
+          if (data.brandHeadline) setHeadline(data.brandHeadline);
+          if (data.brandImage) {
+            setImageUrl(
+              urlFor(data.brandImage)
+                .width(800)
+                .quality(85)
+                .auto("format")
+                .url(),
+            );
+          }
+          if (data.brandBody) {
+            // Split on double newlines to get paragraphs
+            const parts = data.brandBody.split(/\n\n+/).filter(Boolean);
+            if (parts.length > 0) {
+              // Last paragraph is the closing (bold text)
+              const last = parts[parts.length - 1];
+              const rest = parts.slice(0, -1);
+              if (rest.length > 0) {
+                setBodyParagraphs(rest);
+                setClosing(last);
+              } else {
+                setBodyParagraphs([]);
+                setClosing(last);
+              }
+            }
+          }
+        }
+      })
+      .catch((err) => console.error("Failed to load brand statement:", err));
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true)
-          observer.unobserve(entry.target)
+          setVisible(true);
+          observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.15 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+      { threshold: 0.15 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section ref={sectionRef} aria-label="Brand Story">
-      {/* ── TOP DIVIDER — cultural pattern ── */}
       <CulturalPatternDivider />
 
       <div
         className="container"
         style={{
-          paddingTop: 'clamp(4rem, 8vw, 6rem)',
-          paddingBottom: 'clamp(4rem, 8vw, 6rem)',
+          paddingTop: "clamp(4rem, 8vw, 6rem)",
+          paddingBottom: "clamp(4rem, 8vw, 6rem)",
         }}
       >
-        {/* ── TWO-COLUMN KULESHOV LAYOUT ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-
-          {/* LEFT — The image with cultural overlay */}
+          {/* LEFT — Image with cultural overlay */}
           <div
             className="relative overflow-hidden"
             style={{
-              aspectRatio: '3 / 4',
+              aspectRatio: "3 / 4",
               opacity: visible ? 1 : 0,
-              transform: visible ? 'translateX(0)' : 'translateX(-24px)',
-              transition: 'opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1)',
+              transform: visible ? "translateX(0)" : "translateX(-24px)",
+              transition:
+                "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1), transform 700ms cubic-bezier(0.16, 1, 0.3, 1)",
             }}
           >
-            {/* Lifestyle photo — someone wearing the piece expressively */}
             <img
-              src="/hero.jpg"
+              src={imageUrl}
               alt="A person wearing Tee's and Steeze — confidence, not costume"
               loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* Grain texture on image */}
             <div
               className="absolute inset-0 z-5 pointer-events-none"
               style={{
                 opacity: 0.04,
                 backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'repeat',
-                backgroundSize: '128px 128px',
+                backgroundRepeat: "repeat",
+                backgroundSize: "128px 128px",
               }}
             />
 
-            {/* Cultural pattern overlay on image */}
             <CulturalImageOverlay />
 
-            {/* Subtle dark edge vignette */}
             <div
               className="absolute inset-0 z-8 pointer-events-none"
-              style={{
-                boxShadow: 'inset 0 0 80px rgba(10, 10, 10, 0.5)',
-              }}
+              style={{ boxShadow: "inset 0 0 80px rgba(10, 10, 10, 0.5)" }}
             />
           </div>
 
-          {/* RIGHT — The copy */}
+          {/* RIGHT — Copy from Sanity */}
           <div
             style={{
               opacity: visible ? 1 : 0,
-              transform: visible ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms',
+              transform: visible ? "translateY(0)" : "translateY(20px)",
+              transition:
+                "opacity 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms, transform 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms",
             }}
           >
-            {/* Section label */}
             <span
               className="caption"
-              style={{ color: 'var(--color-steeze-pink)', letterSpacing: '0.12em' }}
+              style={{
+                color: "var(--color-steeze-pink)",
+                letterSpacing: "0.12em",
+              }}
             >
               The Steeze
             </span>
 
-            {/* Headline */}
-            <h2 className="display-md mt-4">
-              Every piece carries something.
-            </h2>
+            <h2 className="display-md mt-4">{headline}</h2>
 
-            {/* Body — refusal → idea → conviction */}
             <div className="mt-8 space-y-5">
-              <p className="body-lg" style={{ color: 'var(--color-stone)' }}>
-                Tee's and Steeze didn't start as a business plan. It started as a
-                refusal — a refusal to wear what everyone else was wearing, to dress
-                the way the market told us to dress, to build a brand that looked
-                like every other brand.
-              </p>
-
-              <p className="body-lg" style={{ color: 'var(--color-stone)' }}>
-                Three years ago, one idea: make pieces that carry something. Not
-                just fabric. Not just a print. The steeze — the confidence and
-                energy you feel the moment you put it on. That feeling isn't
-                designed in a boardroom. It's built from conviction.
-              </p>
+              {bodyParagraphs.map((paragraph, i) => (
+                <p
+                  key={i}
+                  className="body-lg"
+                  style={{ color: "var(--color-stone)" }}
+                >
+                  {paragraph}
+                </p>
+              ))}
 
               <p
                 className="body-lg font-medium"
-                style={{ color: 'var(--color-bone)' }}
+                style={{ color: "var(--color-bone)" }}
               >
-                Every piece has a story. Every fit has a steeze.
-                <br />
-                That's why we're here.
+                {closing.split("\n").map((line, i) => (
+                  <span key={i}>
+                    {line}
+                    {i < closing.split("\n").length - 1 && <br />}
+                  </span>
+                ))}
               </p>
             </div>
 
-            {/* CTA */}
             <div className="mt-10">
               <Link to="/about" className="link-cta">
                 Read the full story →
@@ -249,8 +299,7 @@ export default function BrandStatement() {
         </div>
       </div>
 
-      {/* ── BOTTOM DIVIDER — cultural pattern (flipped) ── */}
       <CulturalPatternDivider flip />
     </section>
-  )
+  );
 }
