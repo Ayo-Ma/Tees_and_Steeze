@@ -356,6 +356,7 @@ export default function Shop() {
         </section>
 
         {/* ── DROP SIGNUP STRIP ── */}
+        {/* ── DROP SIGNUP STRIP ── */}
         <section
           aria-label="Drop signup"
           style={{
@@ -364,53 +365,57 @@ export default function Shop() {
           }}
         >
           <div
-            className="container flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
+            className="container"
             style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
           >
-            <div className="flex-shrink-0">
-              <p
-                className="font-body font-medium text-bone"
-                style={{ fontSize: "0.9375rem" }}
-              >
-                Next drop coming.
-              </p>
-              <p
-                className="font-body text-stone mt-0.5"
-                style={{ fontSize: "0.8125rem" }}
-              >
-                Early access to every release. No spam. Just the drop.
-              </p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
+              <div className="flex-shrink-0">
+                <p
+                  className="font-body font-medium text-bone"
+                  style={{ fontSize: "0.9375rem" }}
+                >
+                  Next drop coming.
+                </p>
+                <p
+                  className="font-body text-stone mt-0.5"
+                  style={{ fontSize: "0.8125rem" }}
+                >
+                  Early access. No spam. Just the drop.
+                </p>
+              </div>
+              {!signupDone ? (
+                <form
+                  onSubmit={handleSignup}
+                  className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto"
+                >
+                  <input
+                    type="text"
+                    value={signupValue}
+                    onChange={(e) => setSignupValue(e.target.value)}
+                    placeholder="WhatsApp or email"
+                    className="input w-full sm:w-[220px]"
+                    required
+                    aria-label="WhatsApp number or email"
+                  />
+                  <button
+                    type="submit"
+                    className="btn-signup whitespace-nowrap w-full sm:w-auto"
+                  >
+                    Get early access
+                  </button>
+                </form>
+              ) : (
+                <p
+                  className="font-body font-medium"
+                  style={{
+                    fontSize: "0.875rem",
+                    color: "var(--color-steeze-green)",
+                  }}
+                >
+                  You're on the list. ✓
+                </p>
+              )}
             </div>
-            {!signupDone ? (
-              <form
-                onSubmit={handleSignup}
-                className="flex gap-3 w-full sm:w-auto"
-              >
-                <input
-                  type="text"
-                  value={signupValue}
-                  onChange={(e) => setSignupValue(e.target.value)}
-                  placeholder="WhatsApp or email"
-                  className="input flex-1 sm:flex-none"
-                  style={{ minWidth: "220px" }}
-                  required
-                  aria-label="WhatsApp number or email for drop notifications"
-                />
-                <button type="submit" className="btn-signup whitespace-nowrap">
-                  Get early access
-                </button>
-              </form>
-            ) : (
-              <p
-                className="font-body font-medium"
-                style={{
-                  fontSize: "0.875rem",
-                  color: "var(--color-steeze-green)",
-                }}
-              >
-                You're on the list. ✓
-              </p>
-            )}
           </div>
         </section>
       </main>
