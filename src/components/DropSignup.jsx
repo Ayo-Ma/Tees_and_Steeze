@@ -186,7 +186,7 @@ export default function DropSignup() {
                     lineHeight: "1.5",
                   }}
                 >
-                  You'll hear from us once — when something drops. That's it.
+                  You'll hear from us once when something drops. That's it.
                 </p>
               </form>
             ) : (

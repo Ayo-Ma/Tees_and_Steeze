@@ -12,7 +12,7 @@ export default function Hero() {
   const [hero, setHero] = useState({
     headline: "Not just clothes. The steeze.",
     subheadline:
-      "Three years of building something that means something. Unisex streetwear for people who'd rather be felt than followed.",
+      "Three years of building a brand for people who'd rather be felt than followed.",
     cta: "Shop the drop",
     secondaryLink: "Get the next drop first →",
     image: "/hero.jpg",

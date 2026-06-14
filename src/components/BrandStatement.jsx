@@ -130,10 +130,10 @@ const CulturalImageOverlay = () => (
 
 // Default copy — used before Sanity loads or if fields are empty
 const DEFAULTS = {
-  headline: "Every piece carries something.",
+  headline: "Every piece carries Swag.",
   body: [
-    "Tee's and Steeze didn't start as a business plan. It started as a refusal — a refusal to wear what everyone else was wearing, to dress the way the market told us to dress, to build a brand that looked like every other brand.",
-    "Three years ago, one idea: make pieces that carry something. Not just fabric. Not just a print. The steeze — the confidence and energy you feel the moment you put it on. That feeling isn't designed in a boardroom. It's built from conviction.",
+    "Tee's and Steeze didn't start as a business plan. It started as a refusal, a refusal to wear what everyone else was wearing, to dress the way the market told us to dress, to build a brand that looked like every other brand.",
+    "Three years ago, one idea: make pieces that carry a sense of ease. Not just a print. The steeze, the confidence and energy you feel the moment you put it on. That feeling isn't designed in a boardroom. It's built from conviction.",
   ],
   closing:
     "Every piece has a story. Every fit has a steeze.\nThat's why we're here.",
