@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /drop
+
+Sitemap: https://teesandsteeze.com/sitemap.xml

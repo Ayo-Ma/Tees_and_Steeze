@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import { getHomepage, urlFor } from "../../tees-and-steeze/settings/src/lib/sanity";
+import {
+  getHomepage,
+  urlFor,
+} from "../../tees-and-steeze/settings/src/lib/sanity";
 import { useSiteSettings } from "../context/SiteSettingsContext";
 
 export default function Hero() {
@@ -65,6 +68,28 @@ export default function Hero() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={settings.seoTitle} />
         <meta name="twitter:description" content={hero.subheadline} />
+
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Tee's and Steeze",
+            url: "https://teesandsteeze.com",
+            logo: "https://teesandsteeze.com/logo.png",
+            description:
+              "Unisex streetwear brand from Jos, Nigeria. Built with story. Worn with steeze.",
+            foundingDate: "2022-09",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Jos",
+              addressCountry: "NG",
+            },
+            sameAs: [
+              "https://instagram.com/teesandsteeze",
+              "https://tiktok.com/@teesandsteeze",
+            ],
+          })}
+        </script>
       </Helmet>
 
       <section

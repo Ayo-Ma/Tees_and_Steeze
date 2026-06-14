@@ -7,7 +7,7 @@ import RealFits from "../components/RealFits";
 import ShopByCategory from "../components/ShopByCategory";
 export default function Home() {
   return (
-    <section className=" container">
+    <section className="">
       <Hero />
       <FeaturedDrop />
       <BrandStatement />
