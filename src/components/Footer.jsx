@@ -211,7 +211,7 @@ export default function Footer() {
             </p>
           </div>
         </div>
-
+{/* G-QV42G64LF7 */}
         {/* ── BOTTOM ROW — Copyright ── */}
         <div
           className="mt-12 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
