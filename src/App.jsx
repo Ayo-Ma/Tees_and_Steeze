@@ -9,6 +9,7 @@ import Shop from "./pages/Shop";
 import Product from "./pages/Product";
 import About from "./pages/About";
 import DropSignup from "./pages/DropSignup";
+import Page404 from "./pages/Page404";
 import { SiteSettingsProvider } from "./context/SiteSettingsContext";
 import Cart from "./pages/Cart";
 
@@ -47,7 +48,7 @@ function App() {
 
             {/* Drop signup has no nav/footer — standalone */}
             <Route path="/drop" element={<DropSignup />} />
-            <Route path="*" element={<h1>404 Not Found</h1>} />
+            <Route path="*" element={<Page404/>} />
           </Routes>
 
         </BrowserRouter>

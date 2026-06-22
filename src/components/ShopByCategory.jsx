@@ -5,9 +5,11 @@ import { getHomepage, urlFor } from '../../tees-and-steeze/settings/src/lib/sani
 const CATEGORY_SLUGS = [
   { slug: 'tees', label: 'Tees' },
   { slug: 'hoodies', label: 'Hoodies' },
-  { slug: 'jerseys', label: 'Jerseys' },
-  { slug: 'pocket-shirts', label: 'Pocket Shirts' },
-  { slug: 'armless', label: 'Armless' },
+  { slug: 'Tang top shirt', label: 'Tang Top Shirt' },
+  { slug: 'packet-shirts', label: 'Packet Shirts' },
+  { slug: 'bags', label: 'Steezy Bags' },
+  { slug: 'p cap', label: 'P Cap' },
+  { slug: 'net cap', label: 'Net Cap' },
 ]
 
 function CategoryTile({ category, index, visible }) {

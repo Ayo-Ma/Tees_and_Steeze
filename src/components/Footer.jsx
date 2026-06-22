@@ -68,13 +68,14 @@ export default function Footer() {
           <div>
             <Link
               to="/"
-              className="font-display font-semibold uppercase text-bone"
+              className="font-display flex gap-2 items-center font-semibold uppercase text-bone"
               style={{
                 fontSize: "1.25rem",
                 letterSpacing: "0.02em",
                 textDecoration: "none",
               }}
             >
+              <img src="/logo.avif" className="w-9 h-full border border-y-steeze-pink rounded-sm p-1" alt="Tee's & Steeze Logo" />
               Tee's & Steeze
             </Link>
             <p

@@ -101,6 +101,7 @@ export default function Navbar({ isLight = false }) {
   const location = useLocation();
   const { itemCount } = useCart();
   const settings = useSiteSettings();
+  
 
   // Close menu on route change
   useEffect(() => {
@@ -160,14 +161,16 @@ export default function Navbar({ isLight = false }) {
           {/* Logo */}
           <Link
             to="/"
-            className="font-display font-semibold uppercase text-bone"
+            className="font-display flex gap-2 items-center font-semibold uppercase text-bone"
             style={{
               fontSize: "1.125rem",
               letterSpacing: "0.02em",
               textDecoration: "none",
             }}
-          >
-            Tee's & Steeze
+            >
+           <img src="/logo.avif" className="w-9 h-full border border-y-steeze-pink rounded-sm p-1" alt="Tee's & Steeze Logo" />
+          Tee's & Steeze
+           
           </Link>
 
           {/* ── DESKTOP NAV (hidden on mobile) ── */}

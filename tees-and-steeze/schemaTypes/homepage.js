@@ -20,13 +20,14 @@ export default {
       type: 'text',
       rows: 2,
       description: 'The smaller text below the headline.',
-      initialValue: "Three years of building something that means something. Unisex streetwear for people who'd rather be felt than followed.",
+      initialValue:
+        "Three years of building something that means something. Unisex streetwear for people who'd rather be felt than followed.",
     },
     {
       name: 'heroImage',
       title: 'Hero Background Image',
       type: 'image',
-      options: { hotspot: true },
+      options: {hotspot: true},
       description: 'Wide lifestyle photo. Someone wearing the brand, real environment.',
     },
     {
@@ -60,7 +61,7 @@ export default {
       name: 'brandImage',
       title: 'Brand Statement Lifestyle Photo',
       type: 'image',
-      options: { hotspot: true },
+      options: {hotspot: true},
       description: 'Someone wearing the brand expressively. Real, not posed.',
     },
 
@@ -84,7 +85,7 @@ export default {
       of: [
         {
           type: 'image',
-          options: { hotspot: true },
+          options: {hotspot: true},
           fields: [
             {
               name: 'handle',
@@ -132,11 +133,14 @@ export default {
               type: 'string',
               options: {
                 list: [
-                  { title: 'Tees', value: 'tees' },
-                  { title: 'Hoodies', value: 'hoodies' },
-                  { title: 'Jerseys', value: 'jerseys' },
-                  { title: 'Pocket Shirts', value: 'pocket-shirts' },
-                  { title: 'Armless', value: 'armless' },
+                  {title: 'Tees', value: 'tees'},
+                  {title: 'Hoodies', value: 'hoodies'},
+                  {title: 'Tang Top Shirt', value: 'Tang top shirt'},
+                  {title: 'Packet Shirts', value: 'packet-shirts'},
+                  {title: 'Steezy Bags', value: 'bags'},
+                  {title: 'P Cap', value: 'p cap'},
+                  {title: 'Net Cap', value: 'net cap'},
+         
                 ],
               },
             },
@@ -144,11 +148,11 @@ export default {
               name: 'image',
               title: 'Tile Image',
               type: 'image',
-              options: { hotspot: true },
+              options: {hotspot: true},
             },
           ],
           preview: {
-            select: { title: 'category', media: 'image' },
+            select: {title: 'category', media: 'image'},
           },
         },
       ],
@@ -156,7 +160,7 @@ export default {
   ],
   preview: {
     prepare() {
-      return { title: 'Homepage' }
+      return {title: 'Homepage'}
     },
   },
 }

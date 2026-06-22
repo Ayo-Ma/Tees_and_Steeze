@@ -124,10 +124,11 @@ const handleSubmit = (e) => {
           <div className="mb-12">
             <Link
               to="/"
-              className="font-display font-semibold uppercase text-bone"
+              className="font-display flex gap-2 items-center  font-semibold uppercase text-bone"
               style={{
                 fontSize: '1rem',
                 letterSpacing: '0.02em',
+                color: 'var(--color-neutral)',
                 textDecoration: 'none',
                 opacity: 0.6,
                 transition: 'opacity 200ms ease',
@@ -135,7 +136,8 @@ const handleSubmit = (e) => {
               onMouseEnter={(e) => { e.currentTarget.style.opacity = '1' }}
               onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.6' }}
             >
-              Tee's & Steeze
+              <img src="/logo.avif" className="w-9 h-full border border-y-steeze-pink rounded-sm p-1" alt="Tee's & Steeze Logo" />
+                Back to shop
             </Link>
           </div>
 

@@ -343,7 +343,7 @@ function UnisexConviction() {
           }}
         >
           <img
-            src="/about-unisex.jpg"
+            src="/unisex.png"
             alt="Two people — different genders, same Tee's and Steeze piece, same steeze"
             loading="lazy"
             className="absolute inset-0 w-full h-full object-cover"
