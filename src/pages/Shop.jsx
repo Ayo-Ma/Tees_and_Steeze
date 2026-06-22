@@ -10,10 +10,12 @@ import {
 const CATEGORIES = [
   { slug: "all", label: "All" },
   { slug: "tees", label: "Tees" },
+  { slug: "packet-shirts", label: "Packet Shirts" },
   { slug: "hoodies", label: "Hoodies" },
-  { slug: "jerseys", label: "Jerseys" },
-  { slug: "pocket-shirts", label: "Pocket Shirts" },
-  { slug: "armless", label: "Armless" },
+  { slug: "Tang top shirt", label: "Tang Top Shirt" },
+  { slug: "bags", label: "Steezy Bags" },
+  { slug: "p cap", label: "P Cap" },
+  { slug: "net cap", label: "Net Cap" },
 ];
 
 function useReveal(threshold = 0.15) {

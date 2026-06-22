@@ -19,7 +19,7 @@ export function urlFor(source) {
   return builder.image(source)
 }
 
-// ── QUERY HELPERS ──
+// ── QUERY HELPERS ──`
 
 // Get all products (for Shop page)
 export async function getAllProducts() {
