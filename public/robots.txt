@@ -1,6 +1,26 @@
+# robots.txt — teesandsteeze.com
+# Tee's and Steeze — Nigerian Unisex Streetwear
+
+# ── ALLOW ALL CRAWLERS ──
 User-agent: *
 Allow: /
-Disallow: /cart
-Disallow: /drop
 
-Sitemap: https://teesandsteeze.com/sitemap.xml
+# ── BLOCK NON-PUBLIC PAGES ──
+Disallow: /cart
+Disallow: /cart/
+Disallow: /checkout
+Disallow: /checkout/
+
+# ── BLOCK SANITY STUDIO (if ever served from same domain) ──
+Disallow: /studio
+Disallow: /studio/
+
+# ── BLOCK API ROUTES ──
+Disallow: /api/
+Disallow: /_next/
+
+# ── SITEMAP ──
+Sitemap: https://www.teesandsteeze.com/sitemap.xml
+
+# ── CRAWL DELAY (be nice to servers) ──
+Crawl-delay: 1

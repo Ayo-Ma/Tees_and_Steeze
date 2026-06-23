@@ -2,9 +2,185 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tees-and-steeze</title>
+
+    <!-- ══════════════════════════════════════════
+        FAVICON + PWA
+        Replace /favicon.ico with a real favicon.
+        Create a 512x512 PNG at /icon-512.png.
+        ══════════════════════════════════════════ -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="msapplication-TileColor" content="#0A0A0A" />
+
+    <!-- ══════════════════════════════════════════
+        PRIMARY SEO
+        React Helmet overrides these per-page,
+        but this is the fallback for crawlers
+        that don't execute JavaScript.
+        ══════════════════════════════════════════ -->
+    <title>Tee's and Steeze — Nigerian Unisex Streetwear | Shop the Drop</title>
+    <meta
+      name="description"
+      content="Unisex streetwear from Jos, Nigeria. Graphic tees, hoodies, jerseys, pocket shirts, and armless pieces — built with real story, real steeze. Shop the latest drop. Nationwide delivery."
+    />
+    <meta
+      name="keywords"
+      content="Tees and Steeze, Nigerian streetwear, unisex streetwear Nigeria, streetwear Jos, African streetwear brand, buy streetwear online Nigeria, Nigerian fashion brand, unisex fashion Nigeria"
+    />
+    <meta name="author" content="Tee's and Steeze" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://www.teesandsteeze.com/" />
+
+    <!-- ══════════════════════════════════════════
+        OPEN GRAPH — FACEBOOK / WHATSAPP / LINKEDIN
+        ══════════════════════════════════════════ -->
+    <meta property="og:site_name" content="Tee's and Steeze" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.teesandsteeze.com/" />
+    <meta property="og:title" content="Tee's and Steeze — Nigerian Unisex Streetwear" />
+    <meta
+      property="og:description"
+      content="Not just clothes. The steeze. Unisex streetwear built from three years of authentic cultural conviction. Shop the drop."
+    />
+    <meta property="og:image" content="https://www.teesandsteeze.com/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tee's and Steeze — Nigerian Unisex Streetwear" />
+    <meta property="og:locale" content="en_NG" />
+
+    <!-- ══════════════════════════════════════════
+        TWITTER / X CARD
+        ══════════════════════════════════════════ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@teesandsteeze" />
+    <meta name="twitter:creator" content="@teesandsteeze" />
+    <meta name="twitter:title" content="Tee's and Steeze — Nigerian Unisex Streetwear" />
+    <meta name="twitter:description" content="Not just clothes. The steeze. Shop the drop." />
+    <meta name="twitter:image" content="https://www.teesandsteeze.com/og-image.jpg" />
+    <meta name="twitter:image:alt" content="Tee's and Steeze streetwear" />
+
+    <!-- ══════════════════════════════════════════
+        ORGANIZATION SCHEMA — tells Google who we are.
+        This is the most important structured data for
+        a new brand trying to establish entity recognition.
+        ══════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Tee's and Steeze",
+      "alternateName": "Tees and Steeze",
+      "url": "https://www.teesandsteeze.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.teesandsteeze.com/logo.avif",
+        "width": 512,
+        "height": 512
+      },
+      "description": "Unisex streetwear brand from Jos, Nigeria. Founded September 2022. Built with story, worn with steeze.",
+      "foundingDate": "2022-09",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Jos",
+        "addressRegion": "Plateau State",
+        "addressCountry": "NG"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "availableLanguage": "English"
+      },
+      "sameAs": [
+        "https://instagram.com/teesandsteeze",
+        "https://tiktok.com/@teesandsteeze"
+      ]
+    }
+    </script>
+
+    <!-- ══════════════════════════════════════════
+        WEBSITE SCHEMA — enables sitelinks searchbox
+        ══════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Tee's and Steeze",
+      "url": "https://www.teesandsteeze.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.teesandsteeze.com/shop?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- ══════════════════════════════════════════
+        BREADCRUMB SCHEMA — helps Google understand
+        site structure for all pages
+        ══════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.teesandsteeze.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Shop",
+          "item": "https://www.teesandsteeze.com/shop"
+        }
+      ]
+    }
+    </script>
+
+    <!-- ══════════════════════════════════════════
+        FONT PRELOAD — prevents flash of unstyled text.
+        Preload the most critical font weight (600)
+        of Clash Display used for headlines.
+        ══════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="dns-prefetch" href="https://api.fontshare.com" />
+
+    <!-- ══════════════════════════════════════════
+        SANITY CDN PRECONNECT — faster image loading
+        ══════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://cdn.sanity.io" />
+    <link rel="dns-prefetch" href="https://cdn.sanity.io" />
+
+    <!-- ══════════════════════════════════════════
+        PAYSTACK PRECONNECT — faster checkout modal
+        ══════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://js.paystack.co" />
+
+    <!-- ══════════════════════════════════════════
+        GEO TAGS — helps local/regional SEO for Nigeria
+        ══════════════════════════════════════════ -->
+    <meta name="geo.region" content="NG-PL" />
+    <meta name="geo.placename" content="Jos, Plateau State, Nigeria" />
+    <meta name="geo.position" content="9.8965;8.8583" />
+    <meta name="ICBM" content="9.8965, 8.8583" />
+
+    <!-- ══════════════════════════════════════════
+        ADDITIONAL META
+        ══════════════════════════════════════════ -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="color-scheme" content="dark" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
   </head>
   <body>
     <div id="root"></div>

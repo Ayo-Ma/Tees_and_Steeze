@@ -1,18 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+>
+
+  <!-- ── HOMEPAGE ── -->
   <url>
-    <loc>https://teesandsteeze.com/</loc>
+    <loc>https://www.teesandsteeze.com/</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <changefreq>weekly</changefreq>
   </url>
+
+  <!-- ── SHOP / COLLECTION ── -->
   <url>
-    <loc>https://teesandsteeze.com/shop</loc>
+    <loc>https://www.teesandsteeze.com/shop</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+
+  <!-- ── SHOP BY CATEGORY (filtered views) ── -->
+  <url>
+    <loc>https://www.teesandsteeze.com/shop?category=tees</loc>
+    <lastmod>2026-06-23</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://teesandsteeze.com/about</loc>
+    <loc>https://www.teesandsteeze.com/shop?category=hoodies</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
   </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/shop?category=jerseys</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/shop?category=pocket-shirts</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/shop?category=armless</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ── ABOUT / THE STORY ── -->
+  <url>
+    <loc>https://www.teesandsteeze.com/about</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ── DROP SIGNUP ── -->
+  <url>
+    <loc>https://www.teesandsteeze.com/drop</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+
+    <!--  PRODUCT PAGES ── -->
+    Add a new <url> entry for each product the client publishes.
+    Format: https://www.teesandsteeze.com/product/{slug}
+
+    Example (uncomment and fill in when products are live):
+
+  <url>
+    <loc>https://www.teesandsteeze.com/product/nightshift-graphic-tee</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/product/steeze-cargo-hoodie</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/product/culture-pocket-shirt</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.teesandsteeze.com/product/origin-jersey</loc>
+    <lastmod>2026-06-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
