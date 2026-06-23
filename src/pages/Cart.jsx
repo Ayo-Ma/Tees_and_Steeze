@@ -133,9 +133,10 @@ function CartItem({ item, onUpdateQuantity, onRemove }) {
             style={{ border: "1px solid var(--color-border)" }}
           >
             <button
-              onClick={() =>
-                onUpdateQuantity(item.id, item.size, item.quantity - 1)
-              }
+              onClick={() => {
+                if (item.quantity <= 1) return;
+                onUpdateQuantity(item.id, item.size, item.quantity - 1);
+              }}
               disabled={item.quantity <= 1}
               className="flex items-center justify-center cursor-pointer"
               style={{

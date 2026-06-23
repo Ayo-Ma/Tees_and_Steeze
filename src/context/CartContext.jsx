@@ -1,11 +1,26 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback,useEffect } from "react";
 import { trackAddToCart, trackRemoveFromCart } from "../utils/analytics";
 
 const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+const [items, setItems] = useState(() => {
+  try {
+    const saved = localStorage.getItem('tns-cart')
+    return saved ? JSON.parse(saved) : []
+  } catch {
+    return []
+  }
+})
+
+useEffect(() => {
+  try {
+    localStorage.setItem('tns-cart', JSON.stringify(items))
+  } catch {
+    // localStorage unavailable — fail silently
+  }
+}, [items])
 
   /*
    * Add item to cart.
