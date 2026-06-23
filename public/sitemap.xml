@@ -70,10 +70,10 @@
 
 
     <!--  PRODUCT PAGES ── -->
-    Add a new <url> entry for each product the client publishes.
+    <!-- Add a new <url> entry for each product the client publishes.
     Format: https://www.teesandsteeze.com/product/{slug}
 
-    Example (uncomment and fill in when products are live):
+    Example (uncomment and fill in when products are live): -->
 
   <url>
     <loc>https://www.teesandsteeze.com/product/nightshift-graphic-tee</loc>
