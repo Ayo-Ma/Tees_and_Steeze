@@ -44,6 +44,18 @@ export function CartProvider({ children }) {
 
       // ✅ Track add to cart for new item
       trackAddToCart(product, size, 1);
+      window.gtag?.("event", "add_to_cart", {
+        currency: "NGN",
+        value: product.price,
+        items: [
+          {
+            item_id: product.slug,
+            item_name: product.name,
+            price: product.price,
+            quantity: 1,
+          },
+        ],
+      });
 
       return [...prev, newItem];
     });
@@ -58,6 +70,18 @@ export function CartProvider({ children }) {
       if (itemToRemove) {
         // ✅ Track remove from cart
         trackRemoveFromCart(itemToRemove);
+        window.gtag?.("event", "remove_from_cart", {
+          currency: "NGN",
+          value: itemToRemove.price,
+          items: [
+            {
+              item_id: itemToRemove.id,
+              item_name: itemToRemove.name,
+              price: itemToRemove.price,
+              quantity: itemToRemove.quantity,
+            },
+          ],
+        });
       }
 
       return prev.filter((item) => !(item.id === id && item.size === size));
