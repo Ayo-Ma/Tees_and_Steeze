@@ -86,13 +86,39 @@ const CloseIcon = () => (
   </svg>
 );
 
+const SearchIcon = () => (
+  <svg
+    width="18"
+    height="18"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <circle cx="11" cy="11" r="7" />
+    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+  </svg>
+);
+
 /*
  * ── NAV LINKS ──
  */
 const NAV_LINKS = [
-  { to: "/shop", label: "Shop" },
   { to: "/about", label: "About" },
   { to: "/drop", label: "Drops" },
+];
+
+const SHOP_CATEGORIES = [
+  { slug: "all", label: "All" },
+  { slug: "tees", label: "Tees" },
+  { slug: "packet-shirts", label: "Packet Shirts" },
+  { slug: "hoodies", label: "Hoodies" },
+  { slug: "Tang top shirt", label: "Tang Top Shirt" },
+  { slug: "bags", label: "Steezy Bags" },
+  { slug: "p cap", label: "P Cap" },
+  { slug: "net cap", label: "Net Cap" },
 ];
 
 export default function Navbar({ isLight = false }) {
@@ -130,6 +156,7 @@ export default function Navbar({ isLight = false }) {
   }, []);
 
   const isActive = (path) => location.pathname === path;
+  const [shopOpen, setShopOpen] = useState(false);
 
   return (
     <>
@@ -140,42 +167,128 @@ export default function Navbar({ isLight = false }) {
         aria-label="Main navigation"
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: scrolled
-            ? isLight
-              ? "rgba(255, 255, 255, 0.92)"
-              : "rgba(10, 10, 10, 0.92)"
-            : "transparent",
-          backdropFilter: scrolled ? "blur(12px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
-          borderBottom: scrolled
-            ? `1px solid ${isLight ? "#E0E0DC" : "var(--color-border)"}`
-            : "1px solid transparent",
-          transition:
-            "background 300ms ease, border-color 300ms ease, backdrop-filter 300ms ease",
+          padding: scrolled ? "0.75rem 1rem" : "1.25rem 1rem",
+          transition: "padding 300ms ease",
         }}
       >
         <div
-          className="container flex items-center justify-between"
-          style={{ height: "64px" }}
+          className="container grid items-center mx-auto"
+          style={{
+            height: "64px",
+            maxWidth: "var(--container-max)",
+            gridTemplateColumns: "1fr auto 1fr",
+            background: isLight
+              ? "rgba(255, 255, 255, 0.7)"
+              : "rgba(20, 20, 20, 0.6)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: `1px solid ${isLight ? "rgba(224, 224, 220, 0.7)" : "rgba(255, 255, 255, 0.08)"}`,
+            borderRadius: "var(--radius-pill)",
+            boxShadow: scrolled
+              ? isLight
+                ? "var(--shadow-soft-light)"
+                : "var(--shadow-soft)"
+              : "none",
+            paddingLeft: "1.5rem",
+            paddingRight: "1.5rem",
+            transition: "box-shadow 300ms ease, background 300ms ease",
+          }}
         >
-          {/* Logo */}
-          <Link
-            to="/"
-            className="font-display flex gap-2 items-center font-semibold uppercase text-bone"
-            style={{
-              fontSize: "1.125rem",
-              letterSpacing: "0.02em",
-              textDecoration: "none",
-            }}
+          {/* ── DESKTOP LEFT NAV ── */}
+          <div className="hidden md:flex items-center gap-7">
+            {/* Shop — hover dropdown */}
+            <div
+              className="relative"
+              onMouseEnter={() => setShopOpen(true)}
+              onMouseLeave={() => setShopOpen(false)}
             >
-           <img src="/logo.avif" className="w-9 h-full border border-y-steeze-pink rounded-sm p-1" alt="Tee's & Steeze Logo" />
-          Tee's & Steeze
-           
-          </Link>
+              <Link
+                to="/shop"
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.8125rem",
+                  fontWeight: 400,
+                  color: isActive("/shop")
+                    ? "var(--color-bone)"
+                    : "var(--color-stone)",
+                  textDecoration: "none",
+                  letterSpacing: "0.02em",
+                  display: "inline-block",
+                  padding: "0.5rem 0.875rem",
+                  borderRadius: "var(--radius-pill)",
+                  background: shopOpen
+                    ? isLight
+                      ? "rgba(10, 10, 10, 0.06)"
+                      : "rgba(255, 255, 255, 0.08)"
+                    : "transparent",
+                  transition: "color 200ms ease, background 200ms ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "var(--color-bone)";
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive("/shop"))
+                    e.currentTarget.style.color = "var(--color-stone)";
+                }}
+              >
+                Shop
+              </Link>
 
-          {/* ── DESKTOP NAV (hidden on mobile) ── */}
-          <div className="hidden md:flex items-center gap-8">
-            {/* Text links */}
+              {/* Dropdown panel */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  paddingTop: "1.25rem",
+                  opacity: shopOpen ? 1 : 0,
+                  transform: shopOpen ? "translateY(0)" : "translateY(-6px)",
+                  pointerEvents: shopOpen ? "auto" : "none",
+                  transition: "opacity 200ms ease, transform 200ms ease",
+                }}
+              >
+                <div
+                  style={{
+                    background: isLight
+                      ? "rgba(255, 255, 255, 0.85)"
+                      : "rgba(28, 28, 28, 0.85)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    border: `1px solid ${isLight ? "#E0E0DC" : "var(--color-border)"}`,
+                    borderRadius: "var(--radius-md)",
+                    boxShadow: isLight ? "var(--shadow-soft-light)" : "var(--shadow-soft)",
+                    minWidth: "200px",
+                    padding: "0.75rem 0",
+                    overflow: "hidden",
+                  }}
+                >
+                  {SHOP_CATEGORIES.map((cat) => (
+                    <Link
+                      key={cat.slug}
+                      to={cat.slug === "all" ? "/shop" : `/shop?category=${cat.slug}`}
+                      style={{
+                        display: "block",
+                        fontFamily: "var(--font-body)",
+                        fontSize: "0.8125rem",
+                        color: "var(--color-stone)",
+                        textDecoration: "none",
+                        padding: "0.5rem 1.25rem",
+                        transition: "color 150ms ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = "var(--color-bone)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.color = "var(--color-stone)";
+                      }}
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.to}
@@ -188,29 +301,77 @@ export default function Navbar({ isLight = false }) {
                     ? "var(--color-bone)"
                     : "var(--color-stone)",
                   textDecoration: "none",
-                  transition: "color 200ms ease",
                   letterSpacing: "0.02em",
+                  display: "inline-block",
+                  padding: "0.5rem 0.875rem",
+                  borderRadius: "var(--radius-pill)",
+                  background: "transparent",
+                  transition: "color 200ms ease, background 200ms ease",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = "var(--color-bone)";
+                  e.currentTarget.style.background = isLight
+                    ? "rgba(10, 10, 10, 0.06)"
+                    : "rgba(255, 255, 255, 0.08)";
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive(link.to))
                     e.currentTarget.style.color = "var(--color-stone)";
+                  e.currentTarget.style.background = "transparent";
                 }}
               >
                 {link.label}
               </Link>
             ))}
+          </div>
 
-            {/* Divider */}
-            <div
-              style={{
-                width: "1px",
-                height: "20px",
-                background: "var(--color-border)",
-              }}
+          {/* ── CENTERED LOGO ── */}
+          <Link
+            to="/"
+            className="font-display flex gap-2 items-center justify-center font-semibold uppercase text-bone"
+            style={{
+              fontSize: "1.125rem",
+              letterSpacing: "0.02em",
+              textDecoration: "none",
+              gridColumn: 2,
+            }}
+          >
+            <img
+              src="/logo.avif"
+              className="w-9 h-full border border-y-steeze-pink rounded-lg p-1"
+              alt="Tee's & Steeze Logo"
             />
+            <span className="hidden sm:inline">Tee's & Steeze</span>
+          </Link>
+
+          {/* ── DESKTOP RIGHT (search, whatsapp, cart) ── */}
+          <div className="hidden md:flex items-center justify-end gap-6">
+            {/* Search (visual — opens shop) */}
+            <Link
+              to="/shop"
+              aria-label="Search products"
+              style={{
+                color: "var(--color-stone)",
+                transition: "color 200ms ease, background 200ms ease",
+                display: "flex",
+                alignItems: "center",
+                padding: "0.5rem",
+                borderRadius: "50%",
+                background: "transparent",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "var(--color-bone)";
+                e.currentTarget.style.background = isLight
+                  ? "rgba(10, 10, 10, 0.06)"
+                  : "rgba(255, 255, 255, 0.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "var(--color-stone)";
+                e.currentTarget.style.background = "transparent";
+              }}
+            >
+              <SearchIcon />
+            </Link>
 
             {/* WhatsApp */}
             <a
@@ -220,15 +381,22 @@ export default function Navbar({ isLight = false }) {
               aria-label="Contact us on WhatsApp"
               style={{
                 color: "var(--color-stone)",
-                transition: "color 200ms ease",
+                transition: "color 200ms ease, background 200ms ease",
                 display: "flex",
                 alignItems: "center",
+                padding: "0.5rem",
+                borderRadius: "50%",
+                background: "transparent",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "var(--color-steeze-green)";
+                e.currentTarget.style.background = isLight
+                  ? "rgba(10, 10, 10, 0.06)"
+                  : "rgba(255, 255, 255, 0.08)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = "var(--color-stone)";
+                e.currentTarget.style.background = "transparent";
               }}
             >
               <WhatsAppIcon />
@@ -240,36 +408,30 @@ export default function Navbar({ isLight = false }) {
               aria-label="Shopping cart"
               style={{
                 color: "var(--color-stone)",
-                transition: "color 200ms ease",
+                transition: "color 200ms ease, background 200ms ease",
                 display: "flex",
                 alignItems: "center",
+                padding: "0.5rem",
+                borderRadius: "50%",
+                background: "transparent",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "var(--color-bone)";
+                e.currentTarget.style.background = isLight
+                  ? "rgba(10, 10, 10, 0.06)"
+                  : "rgba(255, 255, 255, 0.08)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.color = "var(--color-stone)";
+                e.currentTarget.style.background = "transparent";
               }}
             >
               <CartIcon count={itemCount} />
             </Link>
-
-            {/* CTA */}
-            <Link
-              to="/shop"
-              className="btn-primary"
-              style={{
-                padding: "0.625rem 1.25rem",
-                fontSize: "0.6875rem",
-                letterSpacing: "0.1em",
-              }}
-            >
-              Shop the drop
-            </Link>
           </div>
 
           {/* ── MOBILE RIGHT (visible on mobile only) ── */}
-          <div className="flex md:hidden items-center gap-5">
+          <div className="flex md:hidden items-center justify-end gap-5" style={{ gridColumn: 3 }}>
             {/* Cart */}
             <Link
               to="/cart"

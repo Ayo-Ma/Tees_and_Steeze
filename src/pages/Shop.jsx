@@ -69,7 +69,7 @@ function ProductCard({ product, index }) {
     >
       <div
         className="relative overflow-hidden bg-surface"
-        style={{ aspectRatio: "3 / 4" }}
+        style={{ aspectRatio: "3 / 4", borderRadius: "var(--radius-md)" }}
       >
         <img
           src={primaryImage}
@@ -282,7 +282,7 @@ export default function Shop() {
                     color: isActive
                       ? "var(--color-void)"
                       : "var(--color-stone)",
-                    borderRadius: "0",
+                    borderRadius: "var(--radius-pill)",
                     transition: "all 200ms ease",
                   }}
                   onMouseEnter={(e) => {

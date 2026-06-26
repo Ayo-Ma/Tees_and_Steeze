@@ -143,6 +143,9 @@ export default function DropSignupPage() {
           }}
         />
 
+        {/* ── LOGO WATERMARK ── */}
+        <img src="/logo.avif" alt="" aria-hidden="true" className="logo-watermark" />
+
         {/* ── CONTENT ── */}
         <div
           className="relative z-10 w-full animate-fade-up"
@@ -170,7 +173,7 @@ export default function DropSignupPage() {
             >
               <img
                 src="/logo.avif"
-                className="w-9 h-full border border-y-steeze-pink rounded-sm p-1"
+                className="w-9 h-full border border-y-steeze-pink rounded-lg p-1"
                 alt="Tee's & Steeze Logo"
               />
               Back to shop

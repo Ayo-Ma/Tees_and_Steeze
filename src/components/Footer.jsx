@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSiteSettings } from "../context/SiteSettingsContext";
+import { saveDropSignup } from "../../tees-and-steeze/settings/src/lib/sanity";
 
 /*
  * ── CULTURAL PATTERN BORDER ──
@@ -49,49 +51,114 @@ const FooterBorder = () => (
 );
 
 export default function Footer() {
-  const  settings  = useSiteSettings();
+  const settings = useSiteSettings();
+  const [signupValue, setSignupValue] = useState("");
+  const [signupDone, setSignupDone] = useState(false);
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    if (!signupValue.trim()) return;
+
+    saveDropSignup({
+      contact: signupValue,
+      source: "footer",
+    })
+      .then(() => setSignupDone(true))
+      .catch(() => setSignupDone(true));
+  };
+
   return (
     <footer aria-label="Site footer">
       {/* Cultural border replaces plain line */}
       <FooterBorder />
 
+      {/* ── BRAND MARK + MISSION ── */}
+      <div
+        className="container text-center"
+        style={{ paddingTop: "3.5rem", paddingBottom: "2.5rem" }}
+      >
+        <Link
+          to="/"
+          className="font-display inline-flex gap-2 items-center justify-center font-semibold uppercase text-bone"
+          style={{
+            fontSize: "1.5rem",
+            letterSpacing: "0.02em",
+            textDecoration: "none",
+          }}
+        >
+          <img
+            src="/logo.avif"
+            className="w-11 h-full border border-y-steeze-pink rounded-lg p-1"
+            alt="Tee's & Steeze Logo"
+          />
+          Tee's & Steeze
+        </Link>
+
+        <p
+          className="mx-auto mt-4"
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "0.9375rem",
+            color: "var(--color-stone)",
+            lineHeight: "1.65",
+            maxWidth: "480px",
+          }}
+        >
+          {settings.tagline} Fashion is an expression of individuality and
+          artistry — every piece carries the steeze.
+        </p>
+
+        {/* Newsletter / drop signup */}
+        <div className="mt-8 mx-auto" style={{ maxWidth: "420px" }}>
+          {!signupDone ? (
+            <form
+              onSubmit={handleSignup}
+              className="flex flex-col sm:flex-row gap-2"
+            >
+              <input
+                type="text"
+                value={signupValue}
+                onChange={(e) => setSignupValue(e.target.value)}
+                placeholder="WhatsApp or email"
+                className="input flex-1"
+                required
+                aria-label="WhatsApp number or email"
+              />
+              <button type="submit" className="btn-signup whitespace-nowrap">
+                Get 10% off
+              </button>
+            </form>
+          ) : (
+            <p
+              className="font-body font-medium"
+              style={{ fontSize: "0.875rem", color: "var(--color-steeze-green)" }}
+            >
+              You're on the list. ✓
+            </p>
+          )}
+          <p
+            className="mt-3"
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "0.75rem",
+              color: "var(--color-dim)",
+            }}
+          >
+            Get 10% off your next order. No spam, just the drop.
+          </p>
+        </div>
+      </div>
+
       <div
         className="container"
         style={{
-          paddingTop: "3rem",
           paddingBottom: "3rem",
+          borderTop: "1px solid var(--color-border)",
+          paddingTop: "3rem",
         }}
       >
-        {/* ── TOP ROW — Logo + Nav + Social ── */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10 md:gap-8">
-          {/* Logo + tagline */}
-          <div>
-            <Link
-              to="/"
-              className="font-display flex gap-2 items-center font-semibold uppercase text-bone"
-              style={{
-                fontSize: "1.25rem",
-                letterSpacing: "0.02em",
-                textDecoration: "none",
-              }}
-            >
-              <img src="/logo.avif" className="w-9 h-full border border-y-steeze-pink rounded-sm p-1" alt="Tee's & Steeze Logo" />
-              Tee's & Steeze
-            </Link>
-            <p
-              className="mt-2"
-              style={{
-                fontFamily: "var(--font-body)",
-                fontSize: "0.8125rem",
-                color: "var(--color-dim)",
-                lineHeight: "1.5",
-                maxWidth: "280px",
-              }}
-            >
-             {settings.tagline}
-            </p>
-          </div>
-
+        {/* ── TOP ROW — Nav + Social + Delivery ── */}
+        <div className="flex flex-col md:flex-row md:items-start md:justify-center md:text-left gap-10 md:gap-16 text-center">
           {/* Navigation */}
           <nav aria-label="Footer navigation">
             <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
@@ -209,6 +276,22 @@ export default function Footer() {
             </p>
             <p className="mt-3 body-sm" style={{ color: "var(--color-stone)" }}>
               Lagos & Abuja: 2–3 days.
+            </p>
+          </div>
+
+          {/* Find us — trust signal */}
+          <div>
+            <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
+              Find Us
+            </p>
+            <p
+              className="body-sm"
+              style={{ color: "var(--color-stone)", maxWidth: "200px" }}
+            >
+              Jos, Plateau State, Nigeria
+            </p>
+            <p className="mt-3 body-sm" style={{ color: "var(--color-stone)" }}>
+              Mon – Sat: 9am – 6pm
             </p>
           </div>
         </div>

@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <section className="">
       <Hero />
+      <ShopByCategory />
       <FeaturedDrop />
       <BrandStatement />
       <RealFits />
       <DropSignup />
-      <ShopByCategory />
     </section>
   );
 }

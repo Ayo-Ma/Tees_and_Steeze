@@ -47,6 +47,15 @@
 
   /* Product image ratio */
   --aspect-product: 3 / 4;
+
+  /* Modern surface tokens — rounding & elevation */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.25);
+  --shadow-soft-light: 0 8px 30px rgba(10, 10, 10, 0.08);
+  --shadow-glow-pink: 0 0 0 1px rgba(232, 75, 138, 0.4), 0 8px 24px rgba(232, 75, 138, 0.25);
 }
 
 
@@ -245,12 +254,12 @@ body {
    BUTTONS
    ═══════════════════════════════════════════════════ */
 
-/* Primary — Steeze Pink, square, filled */
+/* Primary — Steeze Pink, pill, filled, lifts on hover */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 1rem 2.25rem;
   background: var(--color-steeze-pink);
   color: var(--color-bone);
   font-family: var(--font-body);
@@ -260,20 +269,24 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background var(--duration-base) ease;
+  transition: background var(--duration-base) ease, transform var(--duration-base) var(--ease-out-expo), box-shadow var(--duration-base) ease;
 }
 
-.btn-primary:hover { background: var(--color-steeze-pink-hover); }
-.btn-primary:active { background: var(--color-steeze-pink-active); }
+.btn-primary:hover {
+  background: var(--color-steeze-pink-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-pink);
+}
+.btn-primary:active { background: var(--color-steeze-pink-active); transform: translateY(0); }
 
 /* Secondary — outlined, inverts on hover */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 1rem 2.25rem;
   background: transparent;
   color: var(--color-bone);
   font-family: var(--font-body);
@@ -283,22 +296,23 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   border: 1px solid var(--color-bone);
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: all var(--duration-base) ease;
+  transition: all var(--duration-base) ease, transform var(--duration-base) var(--ease-out-expo);
 }
 
 .btn-secondary:hover {
   background: var(--color-bone);
   color: var(--color-void);
+  transform: translateY(-2px);
 }
 
-/* Signup — Green, square */
+/* Signup — Green, pill */
 .btn-signup {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 1rem 2.25rem;
   background: var(--color-steeze-green);
   color: var(--color-void);
   font-family: var(--font-body);
@@ -308,12 +322,12 @@ body {
   text-transform: uppercase;
   text-decoration: none;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
-  transition: background var(--duration-base) ease;
+  transition: background var(--duration-base) ease, transform var(--duration-base) var(--ease-out-expo);
 }
 
-.btn-signup:hover { background: var(--color-steeze-green-hover); }
+.btn-signup:hover { background: var(--color-steeze-green-hover); transform: translateY(-2px); }
 
 /* Text link CTA */
 .link-cta {
@@ -358,11 +372,13 @@ body {
   width: 100%;
   aspect-ratio: var(--aspect-product);
   object-fit: cover;
-  transition: transform var(--duration-slow) var(--ease-out-expo);
+  border-radius: var(--radius-md);
+  transition: transform var(--duration-slow) var(--ease-out-expo), box-shadow var(--duration-slow) ease;
 }
 
 .product-item:hover img {
   transform: scale(1.03);
+  box-shadow: var(--shadow-soft);
 }
 
 .product-name {
@@ -391,16 +407,19 @@ body {
   padding: 1rem 1.25rem;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 2px;
+  border-radius: var(--radius-sm);
   color: var(--color-bone);
   font-family: var(--font-body);
   font-size: 0.9375rem;
   outline: none;
-  transition: border-color var(--duration-base) ease;
+  transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
 }
 
 .input::placeholder { color: var(--color-dim); }
-.input:focus { border-color: var(--color-steeze-pink); }
+.input:focus {
+  border-color: var(--color-steeze-pink);
+  box-shadow: 0 0 0 3px rgba(232, 75, 138, 0.15);
+}
 
 
 /* ═══════════════════════════════════════════════════
@@ -429,6 +448,27 @@ body {
 .animate-delay-200 { animation-delay: 200ms; }
 .animate-delay-300 { animation-delay: 300ms; }
 .animate-delay-400 { animation-delay: 400ms; }
+
+
+/* ═══════════════════════════════════════════════════
+   LOGO WATERMARK — fixed, centered, behind every page
+   ═══════════════════════════════════════════════════ */
+
+.logo-watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(60vw, 640px);
+  z-index: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  filter: grayscale(1);
+}
+
+.theme-light .logo-watermark {
+  opacity: 0.04;
+}
 
 
 /* ═══════════════════════════════════════════════════

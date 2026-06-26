@@ -42,7 +42,7 @@ function ProductCard({ product, index }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="relative overflow-hidden bg-surface" style={{ aspectRatio: '3 / 4' }}>
+      <div className="relative overflow-hidden bg-surface" style={{ aspectRatio: '3 / 4', borderRadius: 'var(--radius-md)' }}>
         <img
           src={primaryImage}
           alt={`${product.name} — Tee's and Steeze`}

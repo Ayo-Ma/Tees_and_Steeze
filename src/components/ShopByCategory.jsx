@@ -20,6 +20,7 @@ function CategoryTile({ category, index, visible }) {
       to={`/shop?category=${category.slug}`}
       className="relative block overflow-hidden group"
       style={{
+        borderRadius: 'var(--radius-lg)',
         aspectRatio: index === 0 || index === 1 ? '3 / 4' : '1 / 1',
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0)' : 'translateY(24px)',
