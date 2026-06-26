@@ -341,7 +341,7 @@ export default function Navbar({ isLight = false }) {
               className="w-9 h-full border border-y-steeze-pink rounded-lg p-1"
               alt="Tee's & Steeze Logo"
             />
-            <span className="hidden sm:inline">Tee's & Steeze</span>
+            <span>Tee's & Steeze</span>
           </Link>
 
           {/* ── DESKTOP RIGHT (search, whatsapp, cart) ── */}
