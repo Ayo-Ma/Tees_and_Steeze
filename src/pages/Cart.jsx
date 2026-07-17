@@ -10,7 +10,7 @@ import { useCart } from "../context/CartContext";
  *
  * Docs: https://paystack.com/docs/payments/accept-payments/#popup
  */
-const PAYSTACK_PUBLIC_KEY = "pk_test_85298a51e09eb7758ae6e8d7530e4a9ce212f0a3"; // TODO: replace with real key
+const PAYSTACK_PUBLIC_KEY = "pk_live_109e4b40bdaba0937fd8d9c01a41b300fb212f3e"; // TODO: replace with real key
 
 function payWithPaystack({ email, amount, onSuccess, onClose }) {
   const handler = window.PaystackPop.setup({
