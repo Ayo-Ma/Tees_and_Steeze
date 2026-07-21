@@ -3,330 +3,234 @@ import { Link } from "react-router-dom";
 import { useSiteSettings } from "../context/SiteSettingsContext";
 import { saveDropSignup } from "../../tees-and-steeze/settings/src/lib/sanity";
 
-/*
- * ── CULTURAL PATTERN BORDER ──
- * Slim version of the Adire-geometric pattern.
- * Acts as the top border of the footer —
- * replacing a plain 1px line with cultural texture.
- */
-const FooterBorder = () => (
-  <div className="w-full" style={{ height: "32px", opacity: 0.25 }}>
-    <svg
-      width="100%"
-      height="32"
-      viewBox="0 0 1200 32"
-      preserveAspectRatio="none"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-    >
-      {/* Center line */}
-      <line
-        x1="0"
-        y1="16"
-        x2="1200"
-        y2="16"
-        stroke="#F5F4F0"
-        strokeWidth="0.5"
-      />
-
-      {/* Adire circles at intervals */}
-      {[100, 300, 500, 700, 900, 1100].map((cx) => (
-        <g key={cx}>
-          <circle cx={cx} cy="16" r="6" stroke="#F5F4F0" strokeWidth="1" />
-          <circle cx={cx} cy="16" r="2.5" fill="#F5F4F0" />
-        </g>
-      ))}
-
-      {/* Small diamonds between */}
-      {[200, 400, 600, 800, 1000].map((cx) => (
-        <polygon
-          key={cx}
-          points={`${cx},10 ${cx + 6},16 ${cx},22 ${cx - 6},16`}
-          stroke="#F5F4F0"
-          strokeWidth="1"
-        />
-      ))}
-    </svg>
-  </div>
+const InstagramIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+  </svg>
 );
+
+const TikTokIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.97a8.17 8.17 0 004.78 1.52V7.04a4.84 4.84 0 01-1.01-.35z" />
+  </svg>
+);
+
+const WhatsAppIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+);
+
+function FooterCol({ label, children }) {
+  return (
+    <div>
+      <p
+        style={{
+          fontFamily: "var(--font-body)",
+          fontSize: "0.6875rem",
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          color: "var(--color-dim)",
+          marginBottom: "1.25rem",
+        }}
+      >
+        {label}
+      </p>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function FooterLink({ to, children, external = false }) {
+  const style = {
+    fontFamily: "var(--font-body)",
+    fontSize: "0.875rem",
+    color: "var(--color-stone)",
+    textDecoration: "none",
+    display: "flex",
+    alignItems: "center",
+    gap: "0.5rem",
+    transition: "color 150ms ease",
+  };
+  const hover = (e) => (e.currentTarget.style.color = "var(--color-bone)");
+  const leave = (e) => (e.currentTarget.style.color = "var(--color-stone)");
+
+  if (external) {
+    return (
+      <a href={to} target="_blank" rel="noopener noreferrer" style={style} onMouseEnter={hover} onMouseLeave={leave}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={to} style={style} onMouseEnter={hover} onMouseLeave={leave}>
+      {children}
+    </Link>
+  );
+}
 
 export default function Footer() {
   const settings = useSiteSettings();
-  const [signupValue, setSignupValue] = useState("");
+  const [signupVal, setSignupVal] = useState("");
   const [signupDone, setSignupDone] = useState(false);
 
   const handleSignup = (e) => {
     e.preventDefault();
-    if (!signupValue.trim()) return;
-
-    saveDropSignup({
-      contact: signupValue,
-      source: "footer",
-    })
+    if (!signupVal.trim()) return;
+    saveDropSignup({ contact: signupVal.trim(), source: "footer" })
       .then(() => setSignupDone(true))
       .catch(() => setSignupDone(true));
   };
 
   return (
-    <footer aria-label="Site footer">
-      {/* Cultural border replaces plain line */}
-      <FooterBorder />
+    <footer style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)" }}>
 
-      {/* ── BRAND MARK + MISSION ── */}
-      <div
-        className="container text-center"
-        style={{ paddingTop: "3.5rem", paddingBottom: "2.5rem" }}
-      >
-        <Link
-          to="/"
-          className="font-display inline-flex gap-2 items-center justify-center font-semibold uppercase text-bone"
-          style={{
-            fontSize: "1.5rem",
-            letterSpacing: "0.02em",
-            textDecoration: "none",
-          }}
-        >
-          <img
-            src="/logo.avif"
-            className="w-11 h-full border border-y-steeze-pink rounded-lg p-1"
-            alt="Tee's & Steeze Logo"
-          />
-          Tee's & Steeze
-        </Link>
-
-        <p
-          className="mx-auto mt-4"
-          style={{
-            fontFamily: "var(--font-body)",
-            fontSize: "0.9375rem",
-            color: "var(--color-stone)",
-            lineHeight: "1.65",
-            maxWidth: "480px",
-          }}
-        >
-          {settings.tagline} Fashion is an expression of individuality and
-          artistry — every piece carries the steeze.
-        </p>
-
-        {/* Newsletter / drop signup */}
-        <div className="mt-8 mx-auto" style={{ maxWidth: "420px" }}>
-          {!signupDone ? (
-            <form
-              onSubmit={handleSignup}
-              className="flex flex-col sm:flex-row gap-2"
-            >
-              <input
-                type="text"
-                value={signupValue}
-                onChange={(e) => setSignupValue(e.target.value)}
-                placeholder="WhatsApp or email"
-                className="input flex-1"
-                required
-                aria-label="WhatsApp number or email"
-              />
-              <button type="submit" className="btn-signup whitespace-nowrap">
-                Get 10% off
-              </button>
-            </form>
-          ) : (
-            <p
-              className="font-body font-medium"
-              style={{ fontSize: "0.875rem", color: "var(--color-steeze-green)" }}
-            >
-              You're on the list. ✓
-            </p>
-          )}
-          <p
-            className="mt-3"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "0.75rem",
-              color: "var(--color-dim)",
-            }}
-          >
-            Get 10% off your next order. No spam, just the drop.
-          </p>
-        </div>
-      </div>
-
+      {/* ── BRAND BAR ── */}
       <div
         className="container"
         style={{
-          paddingBottom: "3rem",
-          borderTop: "1px solid var(--color-border)",
           paddingTop: "3rem",
+          paddingBottom: "2rem",
+          borderBottom: "1px solid var(--color-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "2rem",
+          flexWrap: "wrap",
         }}
       >
-        {/* ── TOP ROW — Nav + Social + Delivery ── */}
-        <div className="flex flex-col md:flex-row md:items-start md:justify-center md:text-left gap-10 md:gap-16 text-center">
-          {/* Navigation */}
-          <nav aria-label="Footer navigation">
-            <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
-              Navigate
-            </p>
-            <ul className="flex flex-col gap-3" style={{ listStyle: "none" }}>
-              <li>
-                <Link
-                  to="/shop"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  Shop
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/drop"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  Drop Signup
-                </Link>
-              </li>
-            </ul>
-          </nav>
-
-          {/* Social + Contact */}
-          <div>
-            <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
-              Connect
-            </p>
-            <ul className="flex flex-col gap-3" style={{ listStyle: "none" }}>
-              <li>
-                <a
-                  href={settings.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  Instagram
-                </a>
-              </li>
-              <li>
-                <a
-                  href={settings.tiktok}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  TikTok
-                </a>
-              </li>
-              <li>
-                <a
-                  href={settings.whatsapp}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="body-sm hover:text-bone"
-                  style={{
-                    color: "var(--color-stone)",
-                    textDecoration: "none",
-                    transition: "color 200ms ease",
-                  }}
-                >
-                  WhatsApp
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Delivery info — trust signal */}
-          <div>
-            <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
-              Delivery
-            </p>
-            <p
-              className="body-sm"
-              style={{ color: "var(--color-stone)", maxWidth: "200px" }}
-            >
-              Ships nationwide.
-              <br />
-              {settings.deliveryInfo}
-            </p>
-            <p className="mt-3 body-sm" style={{ color: "var(--color-stone)" }}>
-              Lagos & Abuja: 2–3 days.
-            </p>
-          </div>
-
-          {/* Find us — trust signal */}
-          <div>
-            <p className="caption mb-4" style={{ color: "var(--color-dim)" }}>
-              Find Us
-            </p>
-            <p
-              className="body-sm"
-              style={{ color: "var(--color-stone)", maxWidth: "200px" }}
-            >
-              Jos, Plateau State, Nigeria
-            </p>
-            <p className="mt-3 body-sm" style={{ color: "var(--color-stone)" }}>
-              Mon – Sat: 9am – 6pm
-            </p>
-          </div>
-        </div>
-{/* G-QV42G64LF7 */}
-        {/* ── BOTTOM ROW — Copyright ── */}
-        <div
-          className="mt-12 pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
-          style={{ borderTop: "1px solid var(--color-border)" }}
+        <Link
+          to="/"
+          style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.75rem" }}
         >
-          <p className="caption" style={{ color: "var(--color-dim)" }}>
-            © 2026 Tee's and Steeze. All rights reserved.
-          </p>
-          <p className="caption" style={{ color: "var(--color-dim)" }}>
-            Built by{" "}
-            <a
-              href="https://leadmarkhq.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                color: "var(--color-stone)",
-                textDecoration: "underline",
-                textUnderlineOffset: "2px",
-                transition: "color 200ms ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "var(--color-bone)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "var(--color-stone)";
-              }}
-            >
-              LeadMarkHQ
-            </a>
-          </p>
-        </div>
+          <img src="/logo.avif" style={{ width: "36px", height: "36px", objectFit: "contain" }} alt="T&S" />
+          <span
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "1.25rem",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "var(--color-bone)",
+            }}
+          >
+            Tee's & Steeze
+          </span>
+        </Link>
+
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "0.875rem",
+            color: "var(--color-stone)",
+          }}
+        >
+          {settings.tagline || "Unisex streetwear from Jos, Nigeria."}
+        </p>
+      </div>
+
+      {/* ── LINKS + SIGNUP ── */}
+      <div
+        className="container"
+        style={{
+          paddingTop: "3rem",
+          paddingBottom: "3rem",
+          display: "grid",
+          gridTemplateColumns: "repeat(var(--fcols, 2), 1fr)",
+          gap: "2.5rem 2rem",
+        }}
+        className="[--fcols:2] lg:[--fcols:4]"
+      >
+        {/* Shop */}
+        <FooterCol label="Shop">
+          <FooterLink to="/shop">All pieces</FooterLink>
+          <FooterLink to="/shop?category=tees">Tees</FooterLink>
+          <FooterLink to="/shop?category=hoodies">Hoodies</FooterLink>
+          <FooterLink to="/shop?category=bags">Steezy Bags</FooterLink>
+          <FooterLink to="/drop">Get early access</FooterLink>
+        </FooterCol>
+
+        {/* Info */}
+        <FooterCol label="Info">
+          <FooterLink to="/about">About</FooterLink>
+          <FooterLink to="/shop">Shipping info</FooterLink>
+          <FooterLink to={settings.whatsapp || "#"} external>Returns</FooterLink>
+          <FooterLink to={settings.whatsapp || "#"} external>Contact</FooterLink>
+        </FooterCol>
+
+        {/* Connect */}
+        <FooterCol label="Connect">
+          <FooterLink to={settings.instagram || "#"} external>
+            <InstagramIcon /> Instagram
+          </FooterLink>
+          <FooterLink to={settings.tiktok || "#"} external>
+            <TikTokIcon /> TikTok
+          </FooterLink>
+          <FooterLink to={settings.whatsapp || "#"} external>
+            <WhatsAppIcon /> WhatsApp
+          </FooterLink>
+        </FooterCol>
+
+        {/* Drop signup */}
+        <FooterCol label="Get the drop">
+          {signupDone ? (
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "var(--color-steeze-green)", fontWeight: 600 }}>
+              You're on the list. ✓
+            </p>
+          ) : (
+            <form onSubmit={handleSignup} style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <input
+                type="text"
+                value={signupVal}
+                onChange={(e) => setSignupVal(e.target.value)}
+                placeholder="WhatsApp or email"
+                className="input"
+                required
+                aria-label="WhatsApp or email for drop signup"
+              />
+              <button
+                type="submit"
+                className="btn-signup"
+                style={{ padding: "0.75rem 1.5rem", fontSize: "0.75rem" }}
+              >
+                Join the list
+              </button>
+            </form>
+          )}
+        </FooterCol>
+      </div>
+
+      {/* ── BOTTOM BAR ── */}
+      <div
+        className="container"
+        style={{
+          paddingTop: "1.25rem",
+          paddingBottom: "1.5rem",
+          borderTop: "1px solid var(--color-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "1rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "var(--font-body)",
+            fontSize: "0.75rem",
+            color: "var(--color-dim)",
+          }}
+        >
+          © 2026 Tee's and Steeze. All rights reserved.
+        </p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--color-dim)" }}>
+          Jos, Plateau State, Nigeria
+        </p>
       </div>
     </footer>
   );

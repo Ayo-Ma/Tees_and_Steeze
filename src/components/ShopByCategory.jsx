@@ -2,148 +2,188 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getHomepage, urlFor } from '../../tees-and-steeze/settings/src/lib/sanity'
 
-const CATEGORY_SLUGS = [
+const CATEGORIES = [
   { slug: 'tees', label: 'Tees' },
   { slug: 'hoodies', label: 'Hoodies' },
-  { slug: 'Tang top shirt', label: 'Tang Top Shirt' },
   { slug: 'packet-shirts', label: 'Packet Shirts' },
+  { slug: 'Tang top shirt', label: 'Tang Top' },
   { slug: 'bags', label: 'Steezy Bags' },
-  { slug: 'p cap', label: 'P Cap' },
-  { slug: 'net cap', label: 'Net Cap' },
+  { slug: 'p cap', label: 'Caps' },
 ]
 
-function CategoryTile({ category, index, visible }) {
+function useReveal(threshold = 0.08) {
+  const ref = useRef(null)
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setVisible(true); io.unobserve(e.target) }
+    }, { threshold })
+    if (ref.current) io.observe(ref.current)
+    return () => io.disconnect()
+  }, [threshold])
+  return [ref, visible]
+}
+
+function CategoryTile({ cat, image, index }) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <Link
-      to={`/shop?category=${category.slug}`}
-      className="relative block overflow-hidden group"
+      to={`/shop?category=${cat.slug}`}
       style={{
-        borderRadius: 'var(--radius-lg)',
-        aspectRatio: index === 0 || index === 1 ? '3 / 4' : '1 / 1',
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(24px)',
-        transition: `opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 80}ms`,
+        display: 'block',
+        position: 'relative',
+        overflow: 'hidden',
+        textDecoration: 'none',
+        background: 'var(--color-surface)',
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <img
-        src={category.image}
-        alt={`${category.label} — Tee's and Steeze streetwear`}
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          transform: hovered ? 'scale(1.05)' : 'scale(1)',
-          transition: 'transform 600ms cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      />
-
-      <div
-        className="absolute inset-0"
-        style={{
-          background: hovered ? 'rgba(10, 10, 10, 0.3)' : 'rgba(10, 10, 10, 0.5)',
-          transition: 'background 400ms ease',
-        }}
-      />
-
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
-        <span
-          className="font-display font-semibold uppercase text-bone text-center"
+      {/* Image */}
+      <div style={{ aspectRatio: index < 2 ? '2 / 3' : '1 / 1', position: 'relative', overflow: 'hidden' }}>
+        <img
+          src={image}
+          alt={cat.label}
+          loading="lazy"
           style={{
-            fontSize: 'clamp(1.5rem, 3vw, 2.5rem)',
-            letterSpacing: '0.04em',
-            transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
-            transition: 'transform 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            transform: hovered ? 'scale(1.06)' : 'scale(1)',
+            transition: 'transform 600ms cubic-bezier(0.16,1,0.3,1)',
+          }}
+        />
+        {/* Overlay */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: hovered
+              ? 'rgba(10,10,10,0.55)'
+              : 'rgba(10,10,10,0.25)',
+            transition: 'background 300ms ease',
+          }}
+        />
+
+        {/* Label */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.5rem',
           }}
         >
-          {category.label}
-        </span>
-      </div>
-
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-5"
-        style={{
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? 'translateY(0)' : 'translateY(8px)',
-          transition: 'opacity 300ms ease, transform 300ms cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
-      >
-        <span
-          className="caption"
-          style={{ color: 'var(--color-bone)', letterSpacing: '0.12em' }}
-        >
-          Shop →
-        </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.25rem, 3vw, 2rem)',
+              fontWeight: 700,
+              letterSpacing: '-0.01em',
+              textTransform: 'uppercase',
+              color: 'var(--color-bone)',
+              textAlign: 'center',
+              lineHeight: 1,
+            }}
+          >
+            {cat.label}
+          </span>
+          <span
+            style={{
+              fontFamily: 'var(--font-body)',
+              fontSize: '0.6875rem',
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: hovered ? 'var(--color-bone)' : 'rgba(245,244,240,0.55)',
+              transition: 'color 250ms ease, opacity 250ms ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+            }}
+          >
+            Shop <span style={{ fontSize: '0.875rem' }}>→</span>
+          </span>
+        </div>
       </div>
     </Link>
   )
 }
 
 export default function ShopByCategory() {
-  const sectionRef = useRef(null)
-  const [visible, setVisible] = useState(false)
   const [categoryImages, setCategoryImages] = useState({})
-
-  const CATEGORIES = CATEGORY_SLUGS.map((cat) => ({
-    ...cat,
-    image: categoryImages[cat.slug] || '/hero.jpg',
-  }))
+  const [ref, visible] = useReveal(0.05)
 
   useEffect(() => {
     getHomepage()
       .then((data) => {
         if (data?.categoryImages) {
-          const imageMap = {}
-          data.categoryImages.forEach((item) => {
-            if (item.category && item.image) {
-              imageMap[item.category] = urlFor(item.image).width(600).quality(80).auto('format').url()
+          const map = {}
+          data.categoryImages.forEach((ci) => {
+            if (ci.slug && ci.image) {
+              map[ci.slug] = urlFor(ci.image).width(700).quality(80).url()
             }
           })
-          setCategoryImages(imageMap)
+          setCategoryImages(map)
         }
       })
-      .catch((err) => console.error('Failed to load category images:', err))
+      .catch(() => {})
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true)
-          observer.unobserve(entry.target)
-        }
-      },
-      { threshold: 0.1 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+  const getImage = (slug) => categoryImages[slug] || '/hero.jpg'
 
   return (
-    <section ref={sectionRef} aria-label="Categories" className="section">
+    <section
+      ref={ref}
+      aria-label="Shop by category"
+      style={{ paddingTop: 'clamp(4rem, 7vw, 6rem)', paddingBottom: 'clamp(4rem, 7vw, 6rem)', borderTop: '1px solid var(--color-border)' }}
+    >
       <div className="container">
+        {/* Header */}
         <div
-          className="mb-12 md:mb-16"
           style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            justifyContent: 'space-between',
+            gap: '1rem',
+            marginBottom: '2.5rem',
             opacity: visible ? 1 : 0,
             transform: visible ? 'translateY(0)' : 'translateY(16px)',
-            transition: 'opacity 500ms cubic-bezier(0.16, 1, 0.3, 1), transform 500ms cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'opacity 500ms ease, transform 500ms ease',
           }}
         >
-          <h2 className="display-md">Find your piece.</h2>
+          <div>
+            <div className="section-eyebrow">
+              <span className="section-eyebrow-label">Browse</span>
+            </div>
+            <h2 className="display-sm" style={{ marginTop: '0.5rem' }}>Shop by category.</h2>
+          </div>
+          <Link to="/shop" className="link-cta" style={{ marginBottom: '0.25rem', whiteSpace: 'nowrap' }}>
+            View all →
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-3 sm:mb-4">
-          {CATEGORIES.slice(0, 3).map((cat, i) => (
-            <CategoryTile key={cat.slug} category={cat} index={i} visible={visible} />
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-          {CATEGORIES.slice(3).map((cat, i) => (
-            <CategoryTile key={cat.slug} category={cat} index={i + 3} visible={visible} />
+        {/* Grid — 3 col on sm, 6 col on lg (balanced) */}
+        <div
+          className="[--cols:2] sm:[--cols:3]"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(var(--cols, 2), 1fr)',
+            gap: '1px',
+            background: 'var(--color-border)',
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'translateY(0)' : 'translateY(24px)',
+            transition: 'opacity 600ms ease 100ms, transform 600ms ease 100ms',
+          }}
+        >
+          {CATEGORIES.map((cat, i) => (
+            <div key={cat.slug} style={{ background: 'var(--color-void)' }}>
+              <CategoryTile cat={cat} image={getImage(cat.slug)} index={i} />
+            </div>
           ))}
         </div>
       </div>
