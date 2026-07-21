@@ -61,15 +61,16 @@ function ProductCard({ product, index }) {
       className="group block"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms`,
+        transform: visible ? "translateY(0)" : "translateY(16px)",
+        transition: `opacity 400ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms, transform 400ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms`,
+        textDecoration: "none",
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <div
         className="relative overflow-hidden bg-surface"
-        style={{ aspectRatio: "3 / 4", borderRadius: "var(--radius-md)" }}
+        style={{ aspectRatio: "3 / 4", borderRadius: "var(--radius-sm)" }}
       >
         <img
           src={primaryImage}
@@ -78,9 +79,8 @@ function ProductCard({ product, index }) {
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             opacity: hovered ? 0 : 1,
-            transform: hovered ? "scale(1.03)" : "scale(1)",
-            transition:
-              "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+            transform: hovered ? "scale(1.04)" : "scale(1)",
+            transition: "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
         <img
@@ -90,44 +90,30 @@ function ProductCard({ product, index }) {
           className="absolute inset-0 w-full h-full object-cover"
           style={{
             opacity: hovered ? 1 : 0,
-            transform: hovered ? "scale(1)" : "scale(1.03)",
-            transition:
-              "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+            transform: hovered ? "scale(1)" : "scale(1.04)",
+            transition: "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         />
 
-        {/* Out of stock overlay */}
         {product.inStock === false && (
           <div className="absolute inset-0 bg-void/60 flex items-center justify-center">
-            <span
-              className="caption"
-              style={{ color: "var(--color-bone)", letterSpacing: "0.12em" }}
-            >
+            <span className="caption" style={{ color: "var(--color-bone)", letterSpacing: "0.1em" }}>
               Sold out
             </span>
           </div>
         )}
       </div>
 
-      <div className="mt-5 flex items-start justify-between gap-4">
-        <div>
-          <h2 className="font-body text-[0.9375rem] font-medium text-bone leading-tight">
-            {product.name}
-          </h2>
-          <p className="font-body text-[0.9375rem] text-stone mt-1">
-            {priceFormatted}
-          </p>
-        </div>
-        <span
-          className="font-body text-[0.75rem] font-medium uppercase whitespace-nowrap pt-0.5"
-          style={{
-            letterSpacing: "0.08em",
-            color: hovered ? "var(--color-bone)" : "var(--color-dim)",
-            transition: "color 200ms ease",
-          }}
+      <div className="mt-3">
+        <h2
+          className="font-body font-medium text-bone leading-snug"
+          style={{ fontSize: "0.8125rem" }}
         >
-          View →
-        </span>
+          {product.name}
+        </h2>
+        <p className="font-body text-stone mt-0.5" style={{ fontSize: "0.8125rem" }}>
+          {priceFormatted}
+        </p>
       </div>
     </Link>
   );
@@ -135,21 +121,21 @@ function ProductCard({ product, index }) {
 
 function ShopLoading() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-      {[0, 1, 2, 3].map((i) => (
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
         <div key={i}>
           <div
             className="bg-surface animate-pulse"
-            style={{ aspectRatio: "3 / 4" }}
+            style={{ aspectRatio: "3 / 4", borderRadius: "var(--radius-sm)" }}
           />
-          <div className="mt-5">
+          <div className="mt-3">
             <div
               className="bg-surface animate-pulse"
-              style={{ height: "1rem", width: "60%" }}
+              style={{ height: "0.75rem", width: "65%" }}
             />
             <div
               className="bg-surface animate-pulse mt-2"
-              style={{ height: "1rem", width: "30%" }}
+              style={{ height: "0.75rem", width: "35%" }}
             />
           </div>
         </div>
@@ -330,7 +316,7 @@ export default function Shop() {
           {loading ? (
             <ShopLoading />
           ) : filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
               {filtered.map((product, i) => (
                 <ProductCard
                   key={product._id || product.slug}
