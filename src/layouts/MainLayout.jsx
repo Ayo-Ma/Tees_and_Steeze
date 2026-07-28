@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
-// Commerce pages get white background — homepage stays black
+// Commerce pages get white background — homepage stays dark
 const LIGHT_ROUTES = ['/shop', '/product', '/cart']
 
 export default function MainLayout() {

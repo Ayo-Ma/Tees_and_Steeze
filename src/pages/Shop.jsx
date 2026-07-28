@@ -1,35 +1,33 @@
 import { useEffect, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
-import {
-  getAllProducts,
-  urlFor,
-  saveDropSignup,
-} from "../../tees-and-steeze/settings/src/lib/sanity";
+import { getAllProducts, urlFor, saveDropSignup } from "../../tees-and-steeze/settings/src/lib/sanity";
 
 const CATEGORIES = [
   { slug: "all", label: "All" },
   { slug: "tees", label: "Tees" },
   { slug: "packet-shirts", label: "Packet Shirts" },
   { slug: "hoodies", label: "Hoodies" },
-  { slug: "Tang top shirt", label: "Tang Top Shirt" },
-  { slug: "bags", label: "Steezy Bags" },
+  { slug: "Tang top shirt", label: "Tang Top" },
+  { slug: "bags", label: "Bags" },
   { slug: "p cap", label: "P Cap" },
   { slug: "net cap", label: "Net Cap" },
 ];
 
-function useReveal(threshold = 0.15) {
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "name-asc", label: "Name: A–Z" },
+];
+
+function useReveal(threshold = 0.1) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold },
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.unobserve(entry.target); } },
+      { threshold }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -38,96 +36,79 @@ function useReveal(threshold = 0.15) {
 }
 
 function ProductCard({ product, index }) {
-  const [ref, visible] = useReveal(0.1);
+  const [ref, visible] = useReveal(0.05);
   const [hovered, setHovered] = useState(false);
 
-  // Primary image and hover image from Sanity
-  const primaryImage =
-    product.images && product.images[0]
-      ? urlFor(product.images[0]).width(600).quality(80).url()
-      : "/products/placeholder.jpg";
-
-  const hoverImage =
-    product.images && product.images.length > 2
-      ? urlFor(product.images[2]).width(600).quality(80).url() // worn front (3rd image)
-      : primaryImage;
-
-  const priceFormatted = `₦${product.price.toLocaleString()}`;
+  const primaryImage = product.images?.[0]
+    ? urlFor(product.images[0]).width(560).quality(80).url()
+    : "/products/placeholder.jpg";
+  const hoverImage = product.images?.length > 2
+    ? urlFor(product.images[2]).width(560).quality(80).url()
+    : primaryImage;
 
   return (
     <Link
       ref={ref}
       to={`/product/${product.slug}`}
-      className="group block"
       style={{
+        display: "block",
+        textDecoration: "none",
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms, transform 500ms cubic-bezier(0.16, 1, 0.3, 1) ${index * 60}ms`,
+        transform: visible ? "translateY(0)" : "translateY(12px)",
+        transition: `opacity 400ms cubic-bezier(0.16,1,0.3,1) ${Math.min(index, 6) * 40}ms, transform 400ms cubic-bezier(0.16,1,0.3,1) ${Math.min(index, 6) * 40}ms`,
       }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
+      {/* Image */}
       <div
-        className="relative overflow-hidden bg-surface"
-        style={{ aspectRatio: "3 / 4", borderRadius: "var(--radius-md)" }}
+        style={{
+          position: "relative",
+          overflow: "hidden",
+          aspectRatio: "3 / 4",
+          background: "var(--color-surface)",
+        }}
       >
         <img
           src={primaryImage}
-          alt={`${product.name} — Tee's and Steeze Nigerian streetwear`}
+          alt={product.name}
           loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover"
           style={{
-            opacity: hovered ? 0 : 1,
-            transform: hovered ? "scale(1.03)" : "scale(1)",
-            transition:
-              "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+            position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+            opacity: hovered && hoverImage !== primaryImage ? 0 : 1,
+            transform: `scale(${hovered ? 1.03 : 1})`,
+            transition: "opacity 280ms ease, transform 400ms cubic-bezier(0.16,1,0.3,1)",
           }}
         />
-        <img
-          src={hoverImage}
-          alt={`${product.name} worn — Tee's and Steeze`}
-          loading="lazy"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "scale(1)" : "scale(1.03)",
-            transition:
-              "opacity 300ms ease, transform 400ms cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        />
-
-        {/* Out of stock overlay */}
+        {hoverImage !== primaryImage && (
+          <img
+            src={hoverImage}
+            alt={`${product.name} — worn`}
+            loading="lazy"
+            style={{
+              position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+              opacity: hovered ? 1 : 0,
+              transition: "opacity 280ms ease",
+            }}
+          />
+        )}
         {product.inStock === false && (
-          <div className="absolute inset-0 bg-void/60 flex items-center justify-center">
-            <span
-              className="caption"
-              style={{ color: "var(--color-bone)", letterSpacing: "0.12em" }}
-            >
+          <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.6875rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--color-stone)" }}>
               Sold out
             </span>
           </div>
         )}
       </div>
 
-      <div className="mt-5 flex items-start justify-between gap-4">
-        <div>
-          <h2 className="font-body text-[0.9375rem] font-medium text-bone leading-tight">
-            {product.name}
-          </h2>
-          <p className="font-body text-[0.9375rem] text-stone mt-1">
-            {priceFormatted}
-          </p>
-        </div>
-        <span
-          className="font-body text-[0.75rem] font-medium uppercase whitespace-nowrap pt-0.5"
-          style={{
-            letterSpacing: "0.08em",
-            color: hovered ? "var(--color-bone)" : "var(--color-dim)",
-            transition: "color 200ms ease",
-          }}
-        >
-          View →
-        </span>
+      {/* Info */}
+      <div style={{ paddingTop: "0.75rem" }}>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 500, color: "var(--color-bone)", lineHeight: 1.3 }}>
+          {product.name}
+        </p>
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "var(--color-stone)", marginTop: "0.25rem" }}>
+          ₦{product.price.toLocaleString()}
+        </p>
       </div>
     </Link>
   );
@@ -135,77 +116,57 @@ function ProductCard({ product, index }) {
 
 function ShopLoading() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-      {[0, 1, 2, 3].map((i) => (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2rem 1rem" }} className="sm:grid-cols-3 lg:grid-cols-4">
+      {Array.from({ length: 8 }).map((_, i) => (
         <div key={i}>
-          <div
-            className="bg-surface animate-pulse"
-            style={{ aspectRatio: "3 / 4" }}
-          />
-          <div className="mt-5">
-            <div
-              className="bg-surface animate-pulse"
-              style={{ height: "1rem", width: "60%" }}
-            />
-            <div
-              className="bg-surface animate-pulse mt-2"
-              style={{ height: "1rem", width: "30%" }}
-            />
-          </div>
+          <div style={{ aspectRatio: "3/4", background: "var(--color-surface)", animation: "pulse 2s infinite" }} />
+          <div style={{ height: "0.75rem", width: "65%", background: "var(--color-surface)", marginTop: "0.75rem", animation: "pulse 2s infinite" }} />
+          <div style={{ height: "0.75rem", width: "35%", background: "var(--color-surface)", marginTop: "0.375rem", animation: "pulse 2s infinite" }} />
         </div>
       ))}
     </div>
   );
 }
 
+function sortProducts(products, sortBy) {
+  const arr = [...products];
+  switch (sortBy) {
+    case "price-asc":  return arr.sort((a, b) => a.price - b.price);
+    case "price-desc": return arr.sort((a, b) => b.price - a.price);
+    case "name-asc":   return arr.sort((a, b) => a.name.localeCompare(b.name));
+    default:           return arr; // newest — preserve Sanity order
+  }
+}
+
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get("category") || "all";
+  const [sortBy, setSortBy] = useState("newest");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [signupValue, setSignupValue] = useState("");
   const [signupDone, setSignupDone] = useState(false);
 
-  // Fetch products from Sanity
   useEffect(() => {
-    setLoading(true);
     getAllProducts()
-      .then((data) => {
-        setProducts(data || []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Failed to load products:", err);
-        setProducts([]);
-        setLoading(false);
-      });
+      .then((data) => { setProducts(data || []); setLoading(false); })
+      .catch(() => { setProducts([]); setLoading(false); });
   }, []);
 
-  // Filter products by category
-  const filtered =
-    activeCategory === "all"
-      ? products
-      : products.filter((p) => p.category === activeCategory);
+  const filtered = activeCategory === "all"
+    ? products
+    : products.filter((p) => p.category === activeCategory);
+
+  const displayed = sortProducts(filtered, sortBy);
 
   const handleFilter = (slug) => {
-    if (slug === "all") {
-      setSearchParams({});
-    } else {
-      setSearchParams({ category: slug });
-    }
-    document
-      .getElementById("product-grid")
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    slug === "all" ? setSearchParams({}) : setSearchParams({ category: slug });
   };
 
   const handleSignup = (e) => {
     e.preventDefault();
     if (!signupValue.trim()) return;
-
-    saveDropSignup({
-      contact: signupValue,
-      source: "shop",
-    })
+    saveDropSignup({ contact: signupValue, source: "shop" })
       .then(() => setSignupDone(true))
       .catch(() => setSignupDone(true));
   };
@@ -213,213 +174,177 @@ export default function Shop() {
   return (
     <>
       <Helmet>
-        <title>
-          Shop the Collection — Tee's and Steeze | Buy Streetwear Online Nigeria
-        </title>
-        <meta
-          name="description"
-          content="Shop unisex streetwear from Tee's and Steeze. Graphic tees, hoodies, jerseys, pocket shirts, and armless pieces. Nationwide delivery. Limited drops."
-        />
+        <title>Shop the Collection — Tee's and Steeze | Streetwear Nigeria</title>
+        <meta name="description" content="Shop unisex streetwear from Tee's and Steeze. Graphic tees, hoodies, jerseys, bags, and caps. Nationwide delivery. Limited drops." />
         <link rel="canonical" href="https://teesandsteeze.com/shop" />
-        <meta
-          property="og:title"
-          content="Shop the Collection — Tee's and Steeze"
-        />
-        <meta
-          property="og:description"
-          content="Unisex streetwear. Limited drops. Nationwide delivery."
-        />
+        <meta property="og:title" content="Shop the Collection — Tee's and Steeze" />
+        <meta property="og:description" content="Unisex streetwear. Limited drops. Nationwide delivery." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://teesandsteeze.com/shop" />
-        <meta
-          property="og:image"
-          content="https://teesandsteeze.com/og-shop.jpg"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Shop — Tee's and Steeze" />
-        <meta
-          name="twitter:description"
-          content="Not just clothes. The steeze. Shop the drop."
-        />
       </Helmet>
 
-      <main>
-        {/* ── HEADER ── */}
-        <section
-          aria-label="Shop header"
-          className="container"
-          style={{ paddingTop: "clamp(7rem, 12vw, 10rem)", paddingBottom: "0" }}
-        >
-          <h1 className="display-lg animate-fade-up">The Collection.</h1>
-        </section>
+      <main style={{ paddingTop: "60px" }}>
 
-        {/* ── FILTER BAR ── */}
-        <section
-          aria-label="Category filters"
-          className="container"
-          style={{ paddingTop: "2rem", paddingBottom: "3rem" }}
-        >
-          <nav
-            aria-label="Product categories"
-            className="flex flex-wrap gap-2 animate-fade-up animate-delay-100"
+        {/* ── PAGE HEADER ── */}
+        <div className="container" style={{ paddingTop: "3rem", paddingBottom: "1.5rem", borderBottom: "1px solid var(--color-border)" }}>
+          <h1
+            style={{
+              fontFamily: "var(--font-body)",
+              fontSize: "clamp(1.5rem, 3vw, 2rem)",
+              fontWeight: 700,
+              color: "var(--color-bone)",
+              marginBottom: "1.5rem",
+            }}
           >
-            {CATEGORIES.map((cat) => {
-              const isActive = activeCategory === cat.slug;
-              return (
-                <button
-                  key={cat.slug}
-                  onClick={() => handleFilter(cat.slug)}
-                  className="font-body font-medium uppercase cursor-pointer"
-                  style={{
-                    fontSize: "0.75rem",
-                    letterSpacing: "0.08em",
-                    padding: "0.625rem 1.25rem",
-                    border: "1px solid",
-                    borderColor: isActive
-                      ? "var(--color-bone)"
-                      : "var(--color-border)",
-                    background: isActive ? "var(--color-bone)" : "transparent",
-                    color: isActive
-                      ? "var(--color-void)"
-                      : "var(--color-stone)",
-                    borderRadius: "var(--radius-pill)",
-                    transition: "all 200ms ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.borderColor = "var(--color-stone)";
-                      e.currentTarget.style.color = "var(--color-bone)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!isActive) {
-                      e.currentTarget.style.borderColor = "var(--color-border)";
-                      e.currentTarget.style.color = "var(--color-stone)";
-                    }
-                  }}
-                >
-                  {cat.label}
-                </button>
-              );
-            })}
-          </nav>
+            {activeCategory === "all"
+              ? "All Products"
+              : CATEGORIES.find((c) => c.slug === activeCategory)?.label || "Collection"}
+          </h1>
 
+          {/* Filter + Sort bar */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
+            {/* Category chips */}
+            <nav aria-label="Category filters" style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+              {CATEGORIES.map((cat) => {
+                const active = activeCategory === cat.slug;
+                return (
+                  <button
+                    key={cat.slug}
+                    onClick={() => handleFilter(cat.slug)}
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.8125rem",
+                      fontWeight: active ? 600 : 400,
+                      padding: "0.4375rem 1rem",
+                      border: `1px solid ${active ? "var(--color-bone)" : "var(--color-border)"}`,
+                      background: active ? "var(--color-bone)" : "transparent",
+                      color: active ? "#FFFFFF" : "var(--color-stone)",
+                      borderRadius: "100px",
+                      cursor: "pointer",
+                      transition: "all 180ms ease",
+                      whiteSpace: "nowrap",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) { e.currentTarget.style.borderColor = "var(--color-stone)"; e.currentTarget.style.color = "var(--color-bone)"; }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) { e.currentTarget.style.borderColor = "var(--color-border)"; e.currentTarget.style.color = "var(--color-stone)"; }
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Sort by */}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.625rem", flexShrink: 0 }}>
+              <label
+                htmlFor="sort-select"
+                style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)", whiteSpace: "nowrap" }}
+              >
+                Sort by
+              </label>
+              <select
+                id="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.8125rem",
+                  color: "var(--color-bone)",
+                  background: "transparent",
+                  border: "1px solid var(--color-border)",
+                  padding: "0.4375rem 2rem 0.4375rem 0.75rem",
+                  borderRadius: "100px",
+                  cursor: "pointer",
+                  outline: "none",
+                  appearance: "none",
+                  backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23767676' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "right 0.625rem center",
+                }}
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Result count */}
           {!loading && (
-            <p className="mt-4 caption" style={{ color: "var(--color-dim)" }}>
-              {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
-              {activeCategory !== "all" && (
-                <>
-                  {" "}
-                  in{" "}
-                  <span style={{ color: "var(--color-stone)" }}>
-                    {CATEGORIES.find((c) => c.slug === activeCategory)?.label}
-                  </span>
-                </>
-              )}
+            <p style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", color: "var(--color-dim)", marginTop: "1rem" }}>
+              {displayed.length} {displayed.length === 1 ? "product" : "products"}
             </p>
           )}
-        </section>
+        </div>
 
         {/* ── PRODUCT GRID ── */}
-        <section
-          id="product-grid"
-          aria-label="Products"
-          className="container"
-          style={{ paddingBottom: "clamp(4rem, 8vw, 6rem)" }}
-        >
+        <div className="container" style={{ paddingTop: "2.5rem", paddingBottom: "5rem" }}>
           {loading ? (
             <ShopLoading />
-          ) : filtered.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              {filtered.map((product, i) => (
-                <ProductCard
-                  key={product._id || product.slug}
-                  product={product}
-                  index={i}
-                />
+          ) : displayed.length > 0 ? (
+            <div
+              style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2rem 1rem" }}
+              className="sm:grid-cols-3 lg:grid-cols-4"
+            >
+              {displayed.map((product, i) => (
+                <ProductCard key={product._id || product.slug} product={product} index={i} />
               ))}
             </div>
           ) : (
-            <div
-              className="text-center"
-              style={{ paddingTop: "4rem", paddingBottom: "4rem" }}
-            >
-              <p className="body-lg" style={{ color: "var(--color-stone)" }}>
-                No pieces in this category yet.
+            <div style={{ paddingTop: "5rem", paddingBottom: "5rem", textAlign: "center" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--color-stone)" }}>
+                No products in this category yet.
               </p>
               <button
                 onClick={() => handleFilter("all")}
-                className="link-cta mt-4"
+                className="link-cta"
+                style={{ marginTop: "1rem", display: "inline-block" }}
               >
-                See all pieces →
+                See all products →
               </button>
             </div>
           )}
-        </section>
+        </div>
 
         {/* ── DROP SIGNUP STRIP ── */}
-        {/* ── DROP SIGNUP STRIP ── */}
-        <section
-          aria-label="Drop signup"
-          style={{
-            borderTop: "1px solid var(--color-border)",
-            borderBottom: "1px solid var(--color-border)",
-          }}
-        >
-          <div
-            className="container"
-            style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
-              <div className="flex-shrink-0">
-                <p
-                  className="font-body font-medium text-bone"
-                  style={{ fontSize: "0.9375rem" }}
-                >
-                  Next drop coming.
+        <div style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)" }}>
+          <div className="container" style={{ paddingTop: "2.5rem", paddingBottom: "2.5rem" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }} className="sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9375rem", fontWeight: 600, color: "var(--color-bone)" }}>
+                  Get notified on the next drop.
                 </p>
-                <p
-                  className="font-body text-stone mt-0.5"
-                  style={{ fontSize: "0.8125rem" }}
-                >
-                  Early access. No spam. Just the drop.
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)", marginTop: "0.25rem" }}>
+                  Early access. No spam.
                 </p>
               </div>
-              {!signupDone ? (
-                <form
-                  onSubmit={handleSignup}
-                  className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto"
-                >
+              {signupDone ? (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 600, color: "var(--color-steeze-green)" }}>
+                  You're on the list ✓
+                </p>
+              ) : (
+                <form onSubmit={handleSignup} style={{ display: "flex", gap: "0.5rem" }} className="w-full sm:w-auto">
                   <input
                     type="text"
                     value={signupValue}
                     onChange={(e) => setSignupValue(e.target.value)}
                     placeholder="WhatsApp or email"
-                    className="input w-full sm:w-[220px]"
+                    className="input"
+                    style={{ minWidth: 0, flex: 1 }}
                     required
                     aria-label="WhatsApp number or email"
                   />
-                  <button
-                    type="submit"
-                    className="btn-signup whitespace-nowrap w-full sm:w-auto"
-                  >
-                    Get early access
+                  <button type="submit" className="btn-primary" style={{ whiteSpace: "nowrap", flexShrink: 0 }}>
+                    Join
                   </button>
                 </form>
-              ) : (
-                <p
-                  className="font-body font-medium"
-                  style={{
-                    fontSize: "0.875rem",
-                    color: "var(--color-steeze-green)",
-                  }}
-                >
-                  You're on the list. ✓
-                </p>
               )}
             </div>
           </div>
-        </section>
+        </div>
       </main>
     </>
   );

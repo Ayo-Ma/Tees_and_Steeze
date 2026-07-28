@@ -7,7 +7,6 @@ import { useSiteSettings } from "../context/SiteSettingsContext";
 /*
  * ── ICONS ──
  * Minimal SVG icons — no library dependency.
- * Consistent 20px size, 1.5px stroke.
  */
 const CartIcon = ({ count = 0 }) => (
   <div className="relative">
@@ -127,7 +126,7 @@ export default function Navbar({ isLight = false }) {
   const location = useLocation();
   const { itemCount } = useCart();
   const settings = useSiteSettings();
-  
+
 
   // Close menu on route change
   useEffect(() => {
@@ -341,7 +340,7 @@ export default function Navbar({ isLight = false }) {
               className="w-9 h-full border border-y-steeze-pink rounded-lg p-1"
               alt="Tee's & Steeze Logo"
             />
-            <span className="hidden sm:inline">Tee's & Steeze</span>
+            <span>Tee's & Steeze</span>
           </Link>
 
           {/* ── DESKTOP RIGHT (search, whatsapp, cart) ── */}
@@ -632,23 +631,10 @@ export default function Navbar({ isLight = false }) {
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
           >
-            <line
-              x1="0"
-              y1="12"
-              x2="1200"
-              y2="12"
-              stroke="#F5F4F0"
-              strokeWidth="0.5"
-            />
+            <line x1="0" y1="12" x2="1200" y2="12" stroke="#F5F4F0" strokeWidth="0.5" />
             {[200, 400, 600, 800, 1000].map((cx) => (
               <g key={cx}>
-                <circle
-                  cx={cx}
-                  cy="12"
-                  r="4"
-                  stroke="#F5F4F0"
-                  strokeWidth="1"
-                />
+                <circle cx={cx} cy="12" r="4" stroke="#F5F4F0" strokeWidth="1" />
                 <circle cx={cx} cy="12" r="1.5" fill="#F5F4F0" />
               </g>
             ))}
