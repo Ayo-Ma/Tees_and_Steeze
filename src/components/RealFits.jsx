@@ -95,7 +95,7 @@ export default function RealFits() {
         if (data?.ugcImages?.length) {
           setImages(
             data.ugcImages.map((img) => ({
-              url: urlFor(img.image).width(600).quality(80).url(),
+              url: urlFor(img).width(600).quality(80).url(),
               handle: img.handle || null,
             }))
           );

@@ -124,8 +124,8 @@ export default function ShopByCategory() {
         if (data?.categoryImages) {
           const map = {}
           data.categoryImages.forEach((ci) => {
-            if (ci.slug && ci.image) {
-              map[ci.slug] = urlFor(ci.image).width(700).quality(80).url()
+            if (ci.category && ci.image) {
+              map[ci.category] = urlFor(ci.image).width(700).quality(80).url()
             }
           })
           setCategoryImages(map)

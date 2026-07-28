@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { getHomepage } from "../../tees-and-steeze/settings/src/lib/sanity";
+import { getHomepage, urlFor } from "../../tees-and-steeze/settings/src/lib/sanity";
 
 const DEFAULTS = {
   headline: "Wear the steeze.",
@@ -20,7 +20,9 @@ export default function Hero() {
 
   const headline = data?.heroHeadline || DEFAULTS.headline;
   const subheadline = data?.heroSubheadline || DEFAULTS.subheadline;
-  const heroImage = data?.heroImage || DEFAULTS.heroImage;
+  const heroImage = data?.heroImage
+    ? urlFor(data.heroImage).width(1800).quality(85).url()
+    : DEFAULTS.heroImage;
 
   const dotIdx = headline.indexOf(".");
   const headlineMain = dotIdx > -1 ? headline.slice(0, dotIdx + 1) : headline;
