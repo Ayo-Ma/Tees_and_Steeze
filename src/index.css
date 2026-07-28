@@ -2,58 +2,63 @@
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════
-   TEE'S AND STEEZE — DESIGN SYSTEM
-   Nike confidence × Cultural identity × Dark edge
+   TEE'S AND STEEZE — CLEAN MINIMAL DESIGN SYSTEM
+   White-first · Editorial · Product-focused
    ═══════════════════════════════════════════════════ */
 
 @theme {
-  /* Colours — unchanged */
-  --color-void: #0A0A0A;
-  --color-surface: #141414;
-  --color-surface-elevated: #1C1C1C;
-  --color-border: #2A2A2A;
-  --color-bone: #F5F4F0;
-  --color-stone: #8A8A8A;
-  --color-dim: #555555;
+  /* ── Light-first palette ── */
+  --color-void: #FFFFFF;
+  --color-surface: #F5F5F3;
+  --color-surface-elevated: #EBEBEA;
+  --color-border: #E8E8E6;
+  --color-bone: #111111;
+  --color-stone: #767676;
+  --color-dim: #AAAAAA;
+
+  /* ── Brand accents ── */
   --color-steeze-pink: #E84B8A;
   --color-steeze-pink-hover: #F06BA4;
   --color-steeze-pink-active: #D13A75;
-  --color-steeze-green: #4ADE47;
-  --color-steeze-green-hover: #6EF06A;
+  --color-steeze-green: #22C55E;
+  --color-steeze-green-hover: #16A34A;
   --color-danger: #EF4444;
   --color-warning: #F59E0B;
 
-  /* Fonts */
+  /* ── Fonts ── */
   --font-display: 'Clash Display', 'Arial Black', sans-serif;
   --font-body: 'Satoshi', 'DM Sans', system-ui, sans-serif;
 
-  /* Spacing */
-  --spacing-section: 6rem;
-  --spacing-section-mobile: 4rem;
-  --spacing-hero: 10rem;
+  /* ── Spacing ── */
+  --spacing-section: 5rem;
+  --spacing-section-mobile: 3.5rem;
+  --spacing-hero: 9rem;
   --spacing-hero-mobile: 6rem;
 
-  /* Container */
+  /* ── Container ── */
   --container-max: 1280px;
   --container-content: 720px;
   --container-narrow: 480px;
 
-  /* Animation */
+  /* ── Animation ── */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 400ms;
-  --duration-entrance: 600ms;
+  --duration-entrance: 500ms;
 
-  /* Shape — Nike uses sharp/minimal radius */
+  /* ── Shape ── */
   --radius-sm: 2px;
   --radius-md: 4px;
-  --radius-lg: 6px;
-  --radius-pill: 2px;
+  --radius-lg: 8px;
+  --radius-pill: 100px;
 
-  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.35);
-  --shadow-soft-light: 0 8px 30px rgba(10, 10, 10, 0.08);
-  --shadow-glow-pink: 0 0 0 1px rgba(232, 75, 138, 0.4), 0 8px 24px rgba(232, 75, 138, 0.25);
+  /* ── Shadow ── */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.10);
+  --shadow-soft: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-soft-light: 0 4px 16px rgba(0,0,0,0.06);
 
   --aspect-product: 3 / 4;
 }
@@ -64,7 +69,7 @@
    ═══════════════════════════════════════════════════ */
 
 html {
-  background: var(--color-void);
+  background: #FFFFFF;
   color: var(--color-bone);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -73,31 +78,31 @@ html {
 }
 
 body {
-  background: var(--color-void);
+  background: #FFFFFF;
   min-height: 100vh;
   overflow-x: hidden;
 }
 
 ::selection {
   background: var(--color-steeze-pink);
-  color: var(--color-bone);
+  color: #FFFFFF;
 }
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--color-void); }
+::-webkit-scrollbar-track { background: #FFFFFF; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-stone); }
 
 
 /* ═══════════════════════════════════════════════════
-   TYPOGRAPHY — pushed larger, bolder
+   TYPOGRAPHY
    ═══════════════════════════════════════════════════ */
 
 .display-xl {
   font-family: var(--font-display);
-  font-size: 7.5rem;
+  font-size: 6rem;
   font-weight: 700;
-  line-height: 0.92;
+  line-height: 0.93;
   letter-spacing: -0.03em;
   text-transform: uppercase;
   color: var(--color-bone);
@@ -105,9 +110,9 @@ body {
 
 .display-lg {
   font-family: var(--font-display);
-  font-size: 5rem;
+  font-size: 4rem;
   font-weight: 700;
-  line-height: 0.92;
+  line-height: 0.95;
   letter-spacing: -0.025em;
   text-transform: uppercase;
   color: var(--color-bone);
@@ -115,7 +120,7 @@ body {
 
 .display-md {
   font-family: var(--font-display);
-  font-size: 3.5rem;
+  font-size: 2.75rem;
   font-weight: 700;
   line-height: 1.0;
   letter-spacing: -0.02em;
@@ -125,27 +130,27 @@ body {
 
 .display-sm {
   font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-size: 1.875rem;
   font-weight: 700;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   text-transform: uppercase;
   color: var(--color-bone);
 }
 
 .heading {
   font-family: var(--font-body);
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-size: 1.375rem;
+  font-weight: 600;
   line-height: 1.3;
   color: var(--color-bone);
 }
 
 .body-lg {
   font-family: var(--font-body);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 400;
-  line-height: 1.65;
+  line-height: 1.7;
   color: var(--color-stone);
 }
 
@@ -175,17 +180,16 @@ body {
   color: var(--color-dim);
 }
 
-/* Mobile type scale */
 @media (max-width: 768px) {
-  .display-xl { font-size: 3.25rem; letter-spacing: -0.02em; }
-  .display-lg { font-size: 2.75rem; }
-  .display-md { font-size: 2.25rem; }
-  .display-sm { font-size: 1.625rem; }
-  .heading { font-size: 1.25rem; }
-  .body-lg { font-size: 1rem; }
-  .body { font-size: 0.875rem; }
-  .body-sm { font-size: 0.75rem; }
-  .caption { font-size: 0.625rem; }
+  .display-xl { font-size: 2.75rem; letter-spacing: -0.02em; }
+  .display-lg  { font-size: 2.25rem; }
+  .display-md  { font-size: 1.875rem; }
+  .display-sm  { font-size: 1.5rem; }
+  .heading     { font-size: 1.125rem; }
+  .body-lg     { font-size: 1rem; }
+  .body        { font-size: 0.875rem; }
+  .body-sm     { font-size: 0.75rem; }
+  .caption     { font-size: 0.625rem; }
 }
 
 
@@ -203,10 +207,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+  .container { padding-left: 1rem; padding-right: 1rem; }
 }
 
 .container-content {
@@ -227,34 +228,15 @@ body {
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding-top: var(--spacing-section-mobile);
-    padding-bottom: var(--spacing-section-mobile);
-  }
+  .section { padding-top: var(--spacing-section-mobile); padding-bottom: var(--spacing-section-mobile); }
 }
 
-.section-hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-top: var(--spacing-hero);
-  padding-bottom: var(--spacing-hero);
-}
-
-@media (max-width: 768px) {
-  .section-hero {
-    padding-top: var(--spacing-hero-mobile);
-    padding-bottom: var(--spacing-hero-mobile);
-  }
-}
-
-/* Nike-style section header: label + extending rule */
+/* Section label + extending rule */
 .section-eyebrow {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-eyebrow::after {
@@ -276,48 +258,44 @@ body {
 
 
 /* ═══════════════════════════════════════════════════
-   BUTTONS — rectangular, bold
+   BUTTONS
    ═══════════════════════════════════════════════════ */
 
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2.5rem;
-  background: var(--color-steeze-pink);
-  color: var(--color-bone);
+  padding: 0.875rem 2rem;
+  background: var(--color-bone);
+  color: #FFFFFF;
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
-  border: none;
+  border: 1.5px solid var(--color-bone);
   border-radius: 0;
   cursor: pointer;
-  transition: background var(--duration-base) ease, opacity var(--duration-base) ease;
+  transition: background var(--duration-base) ease, color var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .btn-primary:hover {
-  background: var(--color-steeze-pink-hover);
-  opacity: 0.92;
-}
-
-.btn-primary:active {
-  background: var(--color-steeze-pink-active);
+  background: #2A2A2A;
+  border-color: #2A2A2A;
 }
 
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2.5rem;
+  padding: 0.875rem 2rem;
   background: transparent;
   color: var(--color-bone);
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
   border: 1.5px solid var(--color-bone);
@@ -328,93 +306,97 @@ body {
 
 .btn-secondary:hover {
   background: var(--color-bone);
-  color: var(--color-void);
+  color: #FFFFFF;
 }
 
-.btn-signup {
+.btn-accent {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2.5rem;
-  background: var(--color-steeze-green);
-  color: var(--color-void);
+  padding: 0.875rem 2rem;
+  background: var(--color-steeze-pink);
+  color: #FFFFFF;
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
   border: none;
   border-radius: 0;
   cursor: pointer;
-  transition: background var(--duration-base) ease, opacity var(--duration-base) ease;
+  transition: opacity var(--duration-base) ease;
 }
 
-.btn-signup:hover {
-  background: var(--color-steeze-green-hover);
-  opacity: 0.9;
+.btn-accent:hover { opacity: 0.9; }
+
+/* Legacy alias */
+.btn-signup {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.875rem 2rem;
+  background: var(--color-bone);
+  color: #FFFFFF;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background var(--duration-base) ease;
 }
+
+.btn-signup:hover { background: #2A2A2A; }
 
 .link-cta {
   color: var(--color-bone);
   font-family: var(--font-body);
   font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-decoration: underline;
   text-underline-offset: 4px;
-  text-decoration-thickness: 1.5px;
-  text-decoration-color: var(--color-stone);
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-dim);
   transition: text-decoration-color var(--duration-fast) ease;
   cursor: pointer;
 }
 
-.link-cta:hover {
-  text-decoration-color: var(--color-bone);
-}
+.link-cta:hover { text-decoration-color: var(--color-bone); }
 
 
 /* ═══════════════════════════════════════════════════
-   PRODUCT GRID
+   PRODUCT CARDS — Clean Nike-style
    ═══════════════════════════════════════════════════ */
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1px;
-  background: var(--color-border);
+  gap: 2rem 1rem;
 }
 
-@media (max-width: 640px) {
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-.product-item {
-  cursor: pointer;
-  background: var(--color-void);
-  padding: 1rem;
-}
+.product-item { cursor: pointer; background: transparent; }
 
 .product-item img {
   width: 100%;
   aspect-ratio: var(--aspect-product);
   object-fit: cover;
+  background: var(--color-surface);
   transition: transform var(--duration-slow) var(--ease-out-expo);
 }
 
-.product-item:hover img {
-  transform: scale(1.03);
-}
+.product-item:hover img { transform: scale(1.02); }
 
 .product-name {
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-bone);
-  margin-top: 1rem;
+  margin-top: 0.75rem;
 }
 
 .product-price {
@@ -427,14 +409,14 @@ body {
 
 
 /* ═══════════════════════════════════════════════════
-   FORM INPUTS — sharp
+   FORM INPUTS
    ═══════════════════════════════════════════════════ */
 
 .input {
   width: 100%;
-  padding: 0.875rem 1rem;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  padding: 0.8125rem 1rem;
+  background: #FFFFFF;
+  border: 1.5px solid var(--color-border);
   border-radius: 0;
   color: var(--color-bone);
   font-family: var(--font-body);
@@ -444,9 +426,7 @@ body {
 }
 
 .input::placeholder { color: var(--color-dim); }
-.input:focus {
-  border-color: var(--color-steeze-pink);
-}
+.input:focus { border-color: var(--color-bone); }
 
 
 /* ═══════════════════════════════════════════════════
@@ -454,22 +434,17 @@ body {
    ═══════════════════════════════════════════════════ */
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; }
-  to { opacity: 1; }
+  to   { opacity: 1; }
 }
 
-.animate-fade-up {
-  animation: fadeUp var(--duration-entrance) var(--ease-out-expo) both;
-}
-
-.animate-fade-in {
-  animation: fadeIn var(--duration-entrance) ease both;
-}
+.animate-fade-up  { animation: fadeUp var(--duration-entrance) var(--ease-out-expo) both; }
+.animate-fade-in  { animation: fadeIn var(--duration-entrance) ease both; }
 
 .animate-delay-100 { animation-delay: 100ms; }
 .animate-delay-200 { animation-delay: 200ms; }
@@ -478,72 +453,19 @@ body {
 
 
 /* ═══════════════════════════════════════════════════
-   LOGO WATERMARK
+   HERO DARK OVERRIDE
+   Hero section stays dark — text/bg explicitly inverted
    ═══════════════════════════════════════════════════ */
 
-.logo-watermark {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: min(60vw, 640px);
-  z-index: 0;
-  opacity: 0.03;
-  pointer-events: none;
-  filter: grayscale(1);
-}
-
-.theme-light .logo-watermark {
-  opacity: 0.03;
-}
+.hero-dark { color: #F5F4F0; }
+.hero-dark .display-xl,
+.hero-dark .display-lg,
+.hero-dark .display-md { color: #F5F4F0; }
 
 
 /* ═══════════════════════════════════════════════════
-   LIGHT THEME — Commerce pages (Shop, Product, Cart)
+   LEGACY COMPAT — no-ops to avoid import errors
    ═══════════════════════════════════════════════════ */
 
-.theme-light {
-  --color-void: #FFFFFF;
-  --color-surface: #F5F5F3;
-  --color-surface-elevated: #EEEEEC;
-  --color-border: #E0E0DC;
-  --color-bone: #0A0A0A;
-  --color-stone: #555555;
-  --color-dim: #999999;
-}
-
-.theme-light {
-  background: #FFFFFF;
-  color: #0A0A0A;
-}
-
-.theme-light .input {
-  background: #FFFFFF;
-  border-color: #E0E0DC;
-  color: #0A0A0A;
-}
-
-.theme-light .input::placeholder {
-  color: #999999;
-}
-
-.theme-light .input:focus {
-  border-color: var(--color-steeze-pink);
-}
-
-.theme-light table th,
-.theme-light table td {
-  border-color: #E0E0DC;
-}
-
-.theme-light ::-webkit-scrollbar-track {
-  background: #FFFFFF;
-}
-
-.theme-light ::-webkit-scrollbar-thumb {
-  background: #E0E0DC;
-}
-
-.theme-light .section-eyebrow::after {
-  background: #E0E0DC;
-}
+.logo-watermark  { display: none; }
+.theme-light     { /* light is now the default */ }

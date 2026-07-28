@@ -53,6 +53,7 @@ export default function Hero() {
 
       <section
         aria-label="Hero"
+        className="hero-dark"
         style={{
           position: "relative",
           minHeight: "100vh",
@@ -60,6 +61,7 @@ export default function Hero() {
           flexDirection: "column",
           justifyContent: "flex-end",
           overflow: "hidden",
+          color: "#F5F4F0",
         }}
       >
         {/* Background */}
