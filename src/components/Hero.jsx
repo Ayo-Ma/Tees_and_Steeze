@@ -18,8 +18,8 @@ export default function Hero() {
       .catch(() => {});
   }, []);
 
-  const headline = data?.headline || DEFAULTS.headline;
-  const subheadline = data?.subheadline || DEFAULTS.subheadline;
+  const headline = data?.heroHeadline || DEFAULTS.headline;
+  const subheadline = data?.heroSubheadline || DEFAULTS.subheadline;
   const heroImage = data?.heroImage || DEFAULTS.heroImage;
 
   const dotIdx = headline.indexOf(".");
@@ -86,12 +86,10 @@ export default function Hero() {
 
         {/* Content */}
         <div
-          className="container"
+          className="container hero-content"
           style={{
             position: "relative",
             zIndex: 2,
-            paddingBottom: "clamp(3.5rem, 7vw, 5.5rem)",
-            paddingTop: "clamp(5rem, 10vw, 8rem)",
           }}
         >
           {/* Eyebrow */}
@@ -126,7 +124,7 @@ export default function Hero() {
             className="animate-fade-up animate-delay-200"
             style={{
               fontFamily: "var(--font-body)",
-              fontSize: "clamp(0.9375rem, 1.5vw, 1.0625rem)",
+              fontSize: "1rem",
               fontWeight: 400,
               color: "rgba(245,244,240,0.65)",
               maxWidth: "440px",

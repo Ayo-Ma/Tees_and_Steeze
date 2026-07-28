@@ -23,12 +23,17 @@ function ProductHero({ product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const { addItem } = useCart();
+  const { addItem, items, updateQuantity, removeItem } = useCart();
   const settings = useSiteSettings();
 
+  const inStock = product.inStock !== false;
+
+  const cartItem = selectedSize
+    ? items.find((i) => i.id === product.slug && i.size === selectedSize)
+    : null;
+
   const handleAddToCart = () => {
-    if (!selectedSize) return;
+    if (!selectedSize || !inStock) return;
     addItem(
       {
         id: product.slug,
@@ -39,19 +44,26 @@ function ProductHero({ product }) {
       },
       selectedSize,
     );
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2500);
   };
 
-  const inStock = product.inStock !== false;
-  const ctaLabel = !inStock ? "Sold out" : addedToCart ? "✓ Added to bag" : !selectedSize ? "Select a size" : "Add to bag";
-  const ctaBg = addedToCart ? "var(--color-steeze-green)" : !selectedSize || !inStock ? "var(--color-surface-elevated)" : "var(--color-steeze-pink)";
-  const ctaColor = addedToCart ? "var(--color-void)" : !selectedSize || !inStock ? "var(--color-dim)" : "var(--color-bone)";
+  const handleDecrement = () => {
+    if (!cartItem) return;
+    if (cartItem.quantity <= 1) {
+      removeItem(product.slug, selectedSize);
+    } else {
+      updateQuantity(product.slug, selectedSize, cartItem.quantity - 1);
+    }
+  };
+
+  const handleIncrement = () => {
+    if (!cartItem) return;
+    updateQuantity(product.slug, selectedSize, cartItem.quantity + 1);
+  };
 
   return (
     <section
       aria-label="Product details"
-      style={{ paddingTop: "clamp(5rem, 10vw, 7rem)" }}
+      className="product-page-section"
     >
       {/* Breadcrumb */}
       <div
@@ -95,15 +107,15 @@ function ProductHero({ product }) {
             display: "grid",
             gridTemplateColumns: "1fr",
             gap: "3rem",
-            paddingBottom: "clamp(3rem, 6vw, 5rem)",
+            paddingBottom: "3rem",
           }}
-          className="lg:grid-cols-[1fr_400px]"
+          className="lg:grid-cols-[1fr_400px] product-main-grid"
         >
           {/* ── LEFT: IMAGES ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
             {/* Main image */}
             <div
-              className="animate-fade-up bg-surface"
+              className="animate-fade-up bg-surface product-main-image"
               style={{ position: "relative", overflow: "hidden", aspectRatio: "3 / 4" }}
             >
               {product.images?.[activeImage] && (
@@ -178,9 +190,9 @@ function ProductHero({ product }) {
 
               {/* Name */}
               <h1
+                className="product-page-name"
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "clamp(1.875rem, 3.5vw, 2.75rem)",
                   fontWeight: 700,
                   letterSpacing: "-0.02em",
                   textTransform: "uppercase",
@@ -316,28 +328,103 @@ function ProductHero({ product }) {
                 )}
               </div>
 
-              {/* Add to bag */}
+              {/* Add to bag / Qty stepper */}
               <div style={{ marginTop: "1.5rem" }}>
-                <button
-                  onClick={handleAddToCart}
-                  disabled={!selectedSize || !inStock}
-                  style={{
-                    width: "100%",
-                    fontFamily: "var(--font-body)",
-                    fontSize: "0.8125rem",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    padding: "1.125rem 2rem",
-                    border: "none",
-                    background: ctaBg,
-                    color: ctaColor,
-                    cursor: !selectedSize || !inStock ? "not-allowed" : "pointer",
-                    transition: "all 200ms ease",
-                  }}
-                >
-                  {ctaLabel}
-                </button>
+                {cartItem ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      border: "1.5px solid var(--color-steeze-pink)",
+                      borderRadius: "9999px",
+                      overflow: "hidden",
+                      height: "3.25rem",
+                    }}
+                  >
+                    <button
+                      onClick={handleDecrement}
+                      aria-label="Decrease quantity"
+                      style={{
+                        flex: "0 0 3.25rem",
+                        height: "100%",
+                        background: "transparent",
+                        border: "none",
+                        color: "var(--color-steeze-pink)",
+                        fontSize: "1.5rem",
+                        fontWeight: 300,
+                        cursor: "pointer",
+                        transition: "background 150ms ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(232,75,138,0.08)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    >
+                      −
+                    </button>
+                    <span
+                      style={{
+                        fontFamily: "var(--font-body)",
+                        fontSize: "0.9375rem",
+                        fontWeight: 700,
+                        color: "var(--color-bone)",
+                        letterSpacing: "0.04em",
+                        userSelect: "none",
+                      }}
+                    >
+                      {cartItem.quantity} in bag
+                    </span>
+                    <button
+                      onClick={handleIncrement}
+                      aria-label="Increase quantity"
+                      style={{
+                        flex: "0 0 3.25rem",
+                        height: "100%",
+                        background: "transparent",
+                        border: "none",
+                        color: "var(--color-steeze-pink)",
+                        fontSize: "1.25rem",
+                        fontWeight: 400,
+                        cursor: "pointer",
+                        transition: "background 150ms ease",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(232,75,138,0.08)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={!selectedSize || !inStock}
+                    style={{
+                      width: "100%",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.8125rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      padding: "1.125rem 2rem",
+                      border: "none",
+                      borderRadius: "9999px",
+                      background: !selectedSize || !inStock
+                        ? "var(--color-surface-elevated)"
+                        : "var(--color-steeze-pink)",
+                      color: !selectedSize || !inStock ? "var(--color-dim)" : "#FFFFFF",
+                      cursor: !selectedSize || !inStock ? "not-allowed" : "pointer",
+                      transition: "all 200ms ease",
+                    }}
+                  >
+                    {!inStock ? "Sold out" : !selectedSize ? "Select a size" : "Add to bag"}
+                  </button>
+                )}
 
                 <p
                   style={{

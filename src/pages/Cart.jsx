@@ -6,7 +6,7 @@ import { useSiteSettings } from "../context/SiteSettingsContext";
 
 const PAYSTACK_PUBLIC_KEY =
   import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ||
-  "pk_live_85298a51e09eb7758ae6e8d7530e4a9ce212f0a3";
+  "pk_test_85298a51e09eb7758ae6e8d7530e4a9ce212f0a3";
 
 function loadPaystack(cb) {
   if (window.PaystackPop) return cb();
@@ -278,6 +278,16 @@ export default function Cart() {
         phone: form.phone,
         amount: total,
         metadata: {
+          fullName: form.name,
+          phone: form.phone,
+          address: form.address,
+          city: form.city,
+          items: items.map((i) => ({
+            name: i.name,
+            size: i.size,
+            quantity: i.quantity,
+            price: i.price,
+          })),
           custom_fields: [
             { display_name: "Customer Name",     variable_name: "name",    value: form.name },
             { display_name: "WhatsApp",          variable_name: "phone",   value: form.phone },
@@ -310,7 +320,7 @@ export default function Cart() {
     return (
       <>
         <Helmet><title>Bag — Tee's and Steeze</title><meta name="robots" content="noindex" /></Helmet>
-        <main style={{ paddingTop: "clamp(8rem, 15vw, 11rem)", paddingBottom: "5rem" }}>
+        <main style={{ paddingTop: "8rem", paddingBottom: "5rem" }}>
           <div className="container" style={{ maxWidth: "440px", margin: "0 auto", textAlign: "center" }}>
             <div style={{ width: "56px", height: "56px", border: "1.5px solid var(--color-border)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.5rem" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--color-dim)" strokeWidth="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -329,7 +339,7 @@ export default function Cart() {
     return (
       <>
         <Helmet><title>Order Confirmed — Tee's and Steeze</title><meta name="robots" content="noindex" /></Helmet>
-        <main style={{ paddingTop: "clamp(7rem, 12vw, 10rem)", paddingBottom: "5rem" }}>
+        <main style={{ paddingTop: "7rem", paddingBottom: "5rem" }}>
           <div className="container" style={{ maxWidth: "560px", margin: "0 auto" }}>
             {/* Check */}
             <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "var(--color-steeze-green)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "1.75rem" }}>
@@ -377,7 +387,7 @@ export default function Cart() {
                   href={businessWa}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.625rem", padding: "1rem 1.5rem", background: "#25D366", color: "#FFFFFF", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none", transition: "opacity 180ms ease" }}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.625rem", padding: "1rem 1.5rem", background: "#25D366", color: "#FFFFFF", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none", borderRadius: "9999px", transition: "opacity 180ms ease" }}
                   onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
                   onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
                 >
@@ -389,7 +399,7 @@ export default function Cart() {
                   href={customerWa}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.625rem", padding: "1rem 1.5rem", background: "transparent", color: "#25D366", border: "1.5px solid #25D366", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none", transition: "all 180ms ease" }}
+                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.625rem", padding: "1rem 1.5rem", background: "transparent", color: "#25D366", border: "1.5px solid #25D366", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 600, textDecoration: "none", borderRadius: "9999px", transition: "all 180ms ease" }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = "#25D366"; e.currentTarget.style.color = "#FFFFFF"; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#25D366"; }}
                 >
@@ -420,7 +430,7 @@ export default function Cart() {
         <div className="container" style={{ maxWidth: "1100px", margin: "0 auto", paddingTop: "3rem", paddingBottom: "5rem" }}>
 
           {/* Page title + progress */}
-          <h1 style={{ fontFamily: "var(--font-body)", fontSize: "clamp(1.375rem, 2.5vw, 1.75rem)", fontWeight: 700, color: "var(--color-bone)", marginBottom: "1.5rem" }}>
+          <h1 style={{ fontFamily: "var(--font-body)", fontSize: "1.75rem", fontWeight: 700, color: "var(--color-bone)", marginBottom: "1.5rem" }}>
             {titles[step]}
           </h1>
           <StepProgress current={step} />
@@ -619,9 +629,9 @@ export default function Cart() {
 
                   <button
                     onClick={handlePay}
-                    style={{ width: "100%", padding: "1.125rem", background: "var(--color-steeze-pink)", color: "#FFFFFF", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", border: "none", cursor: "pointer", transition: "opacity 180ms ease" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                    style={{ width: "100%", padding: "1.125rem", background: "var(--color-steeze-pink)", color: "#FFFFFF", fontFamily: "var(--font-body)", fontSize: "0.875rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", border: "none", borderRadius: "9999px", cursor: "pointer", transition: "opacity 180ms ease, transform 150ms ease" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.88"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "translateY(0)"; }}
                   >
                     Pay {totalFormatted}
                   </button>
