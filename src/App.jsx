@@ -17,6 +17,12 @@ import Cart from "./pages/Cart";
 ReactGA.initialize("G-QV42G64LF7"); 
 
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
 function AnalyticsTracker() {
   const location = useLocation();
 
@@ -35,6 +41,7 @@ function App() {
     <SiteSettingsProvider>
       <CartProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <AnalyticsTracker />
 
           <Routes>
