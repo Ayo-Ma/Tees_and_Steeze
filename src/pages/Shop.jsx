@@ -107,7 +107,7 @@ function ProductCard({ product, index }) {
           {product.name}
         </p>
         <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "var(--color-stone)", marginTop: "0.25rem" }}>
-          ₦{product.price.toLocaleString()}
+          {product.price != null ? `₦${product.price.toLocaleString()}` : ""}
         </p>
       </div>
     </Link>
@@ -295,13 +295,13 @@ export default function Shop() {
             </div>
           ) : (
             <div style={{ paddingTop: "5rem", paddingBottom: "5rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--color-stone)" }}>
+              <p style={{ fontFamily: "var(--font-body)", fontSize: "1rem", color: "var(--color-bone)" }}>
                 No products in this category yet.
               </p>
               <button
                 onClick={() => handleFilter("all")}
                 className="link-cta"
-                style={{ marginTop: "1rem", display: "inline-block" }}
+                style={{ marginTop: "1rem", display: "inline-block", background: "none", border: "none", cursor: "pointer", padding: 0 }}
               >
                 See all products →
               </button>

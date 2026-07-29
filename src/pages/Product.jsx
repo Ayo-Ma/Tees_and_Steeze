@@ -100,7 +100,7 @@ function ProductHero({ product }) {
         <span>/</span>
         {product.category && (
           <>
-            <Link to={`/shop?category=${product.category}`}
+            <Link to={`/shop?category=${encodeURIComponent(product.category)}`}
               style={{ color: "var(--color-dim)", textDecoration: "none", textTransform: "capitalize", transition: "color 150ms ease" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-bone)")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-dim)")}
