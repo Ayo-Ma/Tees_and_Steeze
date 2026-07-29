@@ -18,7 +18,6 @@ function UGCPhoto({ image, handle, index }) {
   const [hovered, setHovered] = useState(false);
   const [ref, visible] = useReveal(0.05);
 
-  /* alternate aspect ratios for visual variety */
   const aspects = ["3/4", "1/1", "3/4", "1/1", "3/4", "3/4"];
   const aspect = aspects[index % aspects.length];
 
@@ -49,30 +48,18 @@ function UGCPhoto({ image, handle, index }) {
           transition: "transform 500ms cubic-bezier(0.16,1,0.3,1)",
         }}
       />
-
-      {/* Caption on hover */}
       {handle && (
         <div
           style={{
             position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
+            bottom: 0, left: 0, right: 0,
             padding: "1rem",
             background: "linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 100%)",
             opacity: hovered ? 1 : 0,
             transition: "opacity 200ms ease",
           }}
         >
-          <span
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "0.75rem",
-              fontWeight: 600,
-              color: "var(--color-bone)",
-              letterSpacing: "0.02em",
-            }}
-          >
+          <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 600, color: "var(--color-bone)", letterSpacing: "0.02em" }}>
             @{handle}
           </span>
         </div>
@@ -81,10 +68,31 @@ function UGCPhoto({ image, handle, index }) {
   );
 }
 
-const FALLBACK_IMAGES = Array(6).fill("/hero.jpg");
+const SKELETON_ASPECTS = ["3/4", "1/1", "3/4", "1/1", "3/4", "3/4"];
+
+function SkeletonGrid() {
+  return (
+    <div
+      className="[--cols:2] sm:[--cols:3]"
+      style={{ display: "grid", gridTemplateColumns: "repeat(var(--cols, 2), 1fr)", gap: "1px", background: "var(--color-border)" }}
+    >
+      {SKELETON_ASPECTS.map((aspect, i) => (
+        <div key={i} style={{ background: "var(--color-void)", aspectRatio: aspect }}>
+          <div style={{
+            width: "100%", height: "100%",
+            background: "linear-gradient(90deg, var(--color-surface) 25%, #1c1c1c 50%, var(--color-surface) 75%)",
+            backgroundSize: "200% 100%",
+            animation: `shimmer 1.4s ease-in-out ${i * 80}ms infinite`,
+          }} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function RealFits() {
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [headline, setHeadline] = useState("Real people. Real steeze.");
   const [subheadline, setSubheadline] = useState("Worn by those who move different.");
   const [ref, visible] = useReveal(0.05);
@@ -99,18 +107,16 @@ export default function RealFits() {
               handle: img.handle || null,
             }))
           );
-        } else {
-          setImages(FALLBACK_IMAGES.map((u) => ({ url: u, handle: null })));
         }
         if (data?.ugcHeadline) setHeadline(data.ugcHeadline);
         if (data?.ugcSubheadline) setSubheadline(data.ugcSubheadline);
+        setLoading(false);
       })
-      .catch(() => {
-        setImages(FALLBACK_IMAGES.map((u) => ({ url: u, handle: null })));
-      });
+      .catch(() => setLoading(false));
   }, []);
 
-  if (!images.length) return null;
+  // Hide section entirely once loaded if no photos uploaded yet
+  if (!loading && !images.length) return null;
 
   return (
     <section
@@ -143,22 +149,21 @@ export default function RealFits() {
           </div>
         </div>
 
-        {/* Grid — 3 col, staggered heights via aspect-ratio */}
-        <div
-          className="[--cols:2] sm:[--cols:3]"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(var(--cols, 2), 1fr)",
-            gap: "1px",
-            background: "var(--color-border)",
-          }}
-        >
-          {images.slice(0, 6).map((img, i) => (
-            <div key={i} style={{ background: "var(--color-void)" }}>
-              <UGCPhoto image={img.url} handle={img.handle} index={i} />
-            </div>
-          ))}
-        </div>
+        {/* Skeleton while loading, real photos after */}
+        {loading ? (
+          <SkeletonGrid />
+        ) : (
+          <div
+            className="[--cols:2] sm:[--cols:3]"
+            style={{ display: "grid", gridTemplateColumns: "repeat(var(--cols, 2), 1fr)", gap: "1px", background: "var(--color-border)" }}
+          >
+            {images.slice(0, 6).map((img, i) => (
+              <div key={i} style={{ background: "var(--color-void)" }}>
+                <UGCPhoto image={img.url} handle={img.handle} index={i} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

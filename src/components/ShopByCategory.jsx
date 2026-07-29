@@ -24,12 +24,12 @@ function useReveal(threshold = 0.08) {
   return [ref, visible]
 }
 
-function CategoryTile({ cat, image, index }) {
+function CategoryTile({ cat, image, index, loading }) {
   const [hovered, setHovered] = useState(false)
 
   return (
     <Link
-      to={`/shop?category=${cat.slug}`}
+      to={`/shop?category=${encodeURIComponent(cat.slug)}`}
       style={{
         display: 'block',
         position: 'relative',
@@ -40,28 +40,38 @@ function CategoryTile({ cat, image, index }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Image */}
       <div style={{ aspectRatio: index < 2 ? '2 / 3' : '1 / 1', position: 'relative', overflow: 'hidden' }}>
-        <img
-          src={image}
-          alt={cat.label}
-          loading="lazy"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transform: hovered ? 'scale(1.06)' : 'scale(1)',
-            transition: 'transform 600ms cubic-bezier(0.16,1,0.3,1)',
-          }}
-        />
+        {/* Image or skeleton */}
+        {loading ? (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-elevated, #1a1a1a) 50%, var(--color-surface) 75%)',
+            backgroundSize: '200% 100%',
+            animation: 'shimmer 1.4s ease-in-out infinite',
+          }} />
+        ) : image ? (
+          <img
+            src={image}
+            alt={cat.label}
+            loading="lazy"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              transform: hovered ? 'scale(1.06)' : 'scale(1)',
+              transition: 'transform 600ms cubic-bezier(0.16,1,0.3,1)',
+            }}
+          />
+        ) : (
+          <div style={{ position: 'absolute', inset: 0, background: 'var(--color-surface)' }} />
+        )}
+
         {/* Overlay */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: hovered
-              ? 'rgba(10,10,10,0.55)'
-              : 'rgba(10,10,10,0.25)',
+            background: hovered ? 'rgba(10,10,10,0.55)' : 'rgba(10,10,10,0.35)',
             transition: 'background 300ms ease',
           }}
         />
@@ -100,7 +110,7 @@ function CategoryTile({ cat, image, index }) {
               letterSpacing: '0.12em',
               textTransform: 'uppercase',
               color: hovered ? 'var(--color-bone)' : 'rgba(245,244,240,0.55)',
-              transition: 'color 250ms ease, opacity 250ms ease',
+              transition: 'color 250ms ease',
               display: 'flex',
               alignItems: 'center',
               gap: '0.3rem',
@@ -116,6 +126,7 @@ function CategoryTile({ cat, image, index }) {
 
 export default function ShopByCategory() {
   const [categoryImages, setCategoryImages] = useState({})
+  const [loading, setLoading] = useState(true)
   const [ref, visible] = useReveal(0.05)
 
   useEffect(() => {
@@ -130,11 +141,10 @@ export default function ShopByCategory() {
           })
           setCategoryImages(map)
         }
+        setLoading(false)
       })
-      .catch(() => {})
+      .catch(() => setLoading(false))
   }, [])
-
-  const getImage = (slug) => categoryImages[slug] || '/hero.jpg'
 
   return (
     <section
@@ -167,7 +177,7 @@ export default function ShopByCategory() {
           </Link>
         </div>
 
-        {/* Grid — 3 col on sm, 6 col on lg (balanced) */}
+        {/* Grid */}
         <div
           className="[--cols:2] sm:[--cols:3]"
           style={{
@@ -182,7 +192,7 @@ export default function ShopByCategory() {
         >
           {CATEGORIES.map((cat, i) => (
             <div key={cat.slug} style={{ background: 'var(--color-void)' }}>
-              <CategoryTile cat={cat} image={getImage(cat.slug)} index={i} />
+              <CategoryTile cat={cat} image={categoryImages[cat.slug] || null} index={i} loading={loading} />
             </div>
           ))}
         </div>
