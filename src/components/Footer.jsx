@@ -88,7 +88,7 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)" }}>
+    <footer style={{ borderTop: "1px solid var(--color-border)", background: "var(--color-surface)", paddingInline: "2rem", }}>
 
       {/* ── BRAND BAR ── */}
       <div
@@ -96,6 +96,7 @@ export default function Footer() {
         style={{
           paddingTop: "3rem",
           paddingBottom: "2rem",
+          
           borderBottom: "1px solid var(--color-border)",
           display: "flex",
           alignItems: "center",
