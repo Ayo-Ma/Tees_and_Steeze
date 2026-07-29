@@ -6,7 +6,7 @@ import { useSiteSettings } from "../context/SiteSettingsContext";
 
 const PAYSTACK_PUBLIC_KEY =
   import.meta.env.VITE_PAYSTACK_PUBLIC_KEY ||
-  "pk_test_85298a51e09eb7758ae6e8d7530e4a9ce212f0a3";
+  "pk_live_109e4b40bdaba0937fd8d9c01a41b300fb212f3e";
 
 function loadPaystack(cb) {
   if (window.PaystackPop) return cb();
