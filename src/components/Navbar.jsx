@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useSiteSettings } from "../context/SiteSettingsContext";
+import { getAllProducts, urlFor } from "../../tees-and-steeze/settings/src/lib/sanity";
 
 /*
  * ── ICONS ──
@@ -110,52 +111,358 @@ const NAV_LINKS = [
 ];
 
 const SHOP_CATEGORIES = [
-  { slug: "all", label: "All" },
+  { slug: "all", label: "All Products" },
   { slug: "tees", label: "Tees" },
   { slug: "packet-shirts", label: "Packet Shirts" },
   { slug: "hoodies", label: "Hoodies" },
-  { slug: "Tang top shirt", label: "Tang Top Shirt" },
+  { slug: "Tang top shirt", label: "Tang Top" },
   { slug: "bags", label: "Steezy Bags" },
   { slug: "p cap", label: "P Cap" },
   { slug: "net cap", label: "Net Cap" },
 ];
 
+/* ══════════════════════════════════════════
+   SEARCH OVERLAY
+   ══════════════════════════════════════════ */
+function SearchOverlay({ open, onClose }) {
+  const [query, setQuery] = useState("");
+  const [allProducts, setAllProducts] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const inputRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Fetch products the first time the overlay opens
+  useEffect(() => {
+    if (open && allProducts === null) {
+      setLoading(true);
+      getAllProducts()
+        .then((data) => { setAllProducts(data || []); setLoading(false); })
+        .catch(() => { setAllProducts([]); setLoading(false); });
+    }
+  }, [open, allProducts]);
+
+  // Focus input + clear query on open/close
+  useEffect(() => {
+    if (open) {
+      const id = setTimeout(() => inputRef.current?.focus(), 60);
+      return () => clearTimeout(id);
+    } else {
+      setQuery("");
+    }
+  }, [open]);
+
+  // Escape key closes overlay
+  useEffect(() => {
+    const handler = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  const q = query.trim().toLowerCase();
+  const results =
+    q.length >= 1 && allProducts
+      ? allProducts
+          .filter(
+            (p) =>
+              p.name.toLowerCase().includes(q) ||
+              (p.category || "").toLowerCase().replace(/-/g, " ").includes(q)
+          )
+          .slice(0, 8)
+      : [];
+
+  const handleSelect = (slug) => {
+    navigate(`/product/${slug}`);
+    onClose();
+  };
+
+  const handleCategoryClick = (slug) => {
+    navigate(slug === "all" ? "/shop" : `/shop?category=${encodeURIComponent(slug)}`);
+    onClose();
+  };
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 200,
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transition: "opacity 220ms ease",
+      }}
+    >
+      {/* backdrop */}
+      <div
+        onClick={onClose}
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: "rgba(10, 10, 10, 0.88)",
+          backdropFilter: "blur(6px)",
+          WebkitBackdropFilter: "blur(6px)",
+        }}
+      />
+
+      {/* panel */}
+      <div
+        style={{
+          position: "relative",
+          background: "var(--color-void)",
+          borderBottom: "1px solid rgba(255,255,255,0.08)",
+          padding: "5.5rem 1.5rem 1.75rem",
+          transform: open ? "translateY(0)" : "translateY(-14px)",
+          transition: "transform 300ms cubic-bezier(0.16,1,0.3,1)",
+          maxHeight: "85vh",
+          overflowY: "auto",
+        }}
+      >
+        <div style={{ maxWidth: "600px", margin: "0 auto" }}>
+
+          {/* ── INPUT ROW ── */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.875rem",
+              borderBottom: "1.5px solid rgba(255,255,255,0.25)",
+              paddingBottom: "0.75rem",
+              marginBottom: "1.75rem",
+            }}
+          >
+            <span style={{ color: "var(--color-stone)", flexShrink: 0, display: "flex" }}>
+              <SearchIcon />
+            </span>
+            <input
+              ref={inputRef}
+              type="search"
+              autoComplete="off"
+              placeholder="Search products…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              style={{
+                flex: 1,
+                background: "none",
+                border: "none",
+                outline: "none",
+                fontFamily: "var(--font-body)",
+                fontSize: "1.375rem",
+                fontWeight: 500,
+                color: "var(--color-bone)",
+                letterSpacing: "-0.02em",
+              }}
+            />
+            <button
+              onClick={onClose}
+              aria-label="Close search"
+              style={{
+                flexShrink: 0,
+                background: "none",
+                border: "none",
+                color: "var(--color-stone)",
+                cursor: "pointer",
+                padding: "0.25rem",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <CloseIcon />
+            </button>
+          </div>
+
+          {/* ── RESULTS (typing) ── */}
+          {q.length >= 1 && (
+            <div>
+              {loading ? (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "var(--color-dim)", margin: 0 }}>
+                  Loading…
+                </p>
+              ) : results.length === 0 ? (
+                <p style={{ fontFamily: "var(--font-body)", fontSize: "0.875rem", color: "var(--color-dim)", margin: 0 }}>
+                  No products found for{" "}
+                  <span style={{ color: "var(--color-bone)" }}>"{query}"</span>
+                </p>
+              ) : (
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+                  {results.map((product) => {
+                    const thumb = product.images?.[0]
+                      ? urlFor(product.images[0]).width(96).height(96).fit("crop").url()
+                      : null;
+                    return (
+                      <button
+                        key={product._id}
+                        onClick={() => handleSelect(product.slug)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "1rem",
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          padding: "0.75rem 0.875rem",
+                          borderRadius: "var(--radius-md)",
+                          textAlign: "left",
+                          width: "100%",
+                          transition: "background 140ms ease",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "none")}
+                      >
+                        {/* thumbnail */}
+                        <div
+                          style={{
+                            width: "52px",
+                            height: "52px",
+                            flexShrink: 0,
+                            borderRadius: "6px",
+                            background: "var(--color-surface)",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {thumb && (
+                            <img
+                              src={thumb}
+                              alt={product.name}
+                              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                            />
+                          )}
+                        </div>
+
+                        {/* name + category */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: "0.9375rem",
+                              fontWeight: 600,
+                              color: "var(--color-bone)",
+                              margin: 0,
+                              whiteSpace: "nowrap",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              letterSpacing: "-0.01em",
+                            }}
+                          >
+                            {product.name}
+                          </p>
+                          <p
+                            style={{
+                              fontFamily: "var(--font-body)",
+                              fontSize: "0.75rem",
+                              color: "var(--color-stone)",
+                              margin: "0.125rem 0 0",
+                              textTransform: "capitalize",
+                            }}
+                          >
+                            {(product.category || "").replace(/-/g, " ")}
+                          </p>
+                        </div>
+
+                        {/* price */}
+                        <p
+                          style={{
+                            fontFamily: "var(--font-body)",
+                            fontSize: "0.875rem",
+                            fontWeight: 600,
+                            color: "var(--color-bone)",
+                            flexShrink: 0,
+                            margin: 0,
+                          }}
+                        >
+                          {product.price != null ? `₦${product.price.toLocaleString()}` : ""}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── IDLE STATE — quick categories ── */}
+          {q.length === 0 && (
+            <div>
+              <p
+                style={{
+                  fontFamily: "var(--font-body)",
+                  fontSize: "0.6875rem",
+                  fontWeight: 700,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "var(--color-dim)",
+                  marginBottom: "0.875rem",
+                }}
+              >
+                Browse by category
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                {SHOP_CATEGORIES.map((cat) => (
+                  <button
+                    key={cat.slug}
+                    onClick={() => handleCategoryClick(cat.slug)}
+                    style={{
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.8125rem",
+                      color: "var(--color-stone)",
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid rgba(255,255,255,0.08)",
+                      padding: "0.4375rem 1rem",
+                      borderRadius: "9999px",
+                      cursor: "pointer",
+                      transition: "color 150ms ease, background 150ms ease",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "var(--color-bone)";
+                      e.currentTarget.style.background = "rgba(255,255,255,0.1)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "var(--color-stone)";
+                      e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+                    }}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   NAVBAR
+   ══════════════════════════════════════════ */
 export default function Navbar({ isLight = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [shopOpen, setShopOpen] = useState(false);
   const location = useLocation();
   const { itemCount } = useCart();
   const settings = useSiteSettings();
 
-
-  // Close menu on route change
+  // Close both overlays on route change
   useEffect(() => {
     setMenuOpen(false);
+    setSearchOpen(false);
   }, [location.pathname]);
 
-  // Lock body scroll when menu is open
+  // Lock body scroll when menu or search is open
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+    document.body.style.overflow = menuOpen || searchOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen, searchOpen]);
 
   // Scroll detection — adds background after 50px
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const isActive = (path) => location.pathname === path;
-  const [shopOpen, setShopOpen] = useState(false);
 
   return (
     <>
@@ -264,7 +571,7 @@ export default function Navbar({ isLight = false }) {
                   {SHOP_CATEGORIES.map((cat) => (
                     <Link
                       key={cat.slug}
-                      to={cat.slug === "all" ? "/shop" : `/shop?category=${cat.slug}`}
+                      to={cat.slug === "all" ? "/shop" : `/shop?category=${encodeURIComponent(cat.slug)}`}
                       style={{
                         display: "block",
                         fontFamily: "var(--font-body)",
@@ -345,9 +652,9 @@ export default function Navbar({ isLight = false }) {
 
           {/* ── DESKTOP RIGHT (search, whatsapp, cart) ── */}
           <div className="hidden md:flex items-center justify-end gap-6">
-            {/* Search (visual — opens shop) */}
-            <Link
-              to="/shop"
+            {/* Search */}
+            <button
+              onClick={() => setSearchOpen(true)}
               aria-label="Search products"
               style={{
                 color: "var(--color-stone)",
@@ -357,6 +664,8 @@ export default function Navbar({ isLight = false }) {
                 padding: "0.5rem",
                 borderRadius: "50%",
                 background: "transparent",
+                border: "none",
+                cursor: "pointer",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.color = "var(--color-bone)";
@@ -370,7 +679,7 @@ export default function Navbar({ isLight = false }) {
               }}
             >
               <SearchIcon />
-            </Link>
+            </button>
 
             {/* WhatsApp */}
             <a
@@ -429,8 +738,25 @@ export default function Navbar({ isLight = false }) {
             </Link>
           </div>
 
-          {/* ── MOBILE RIGHT (visible on mobile only) ── */}
-          <div className="flex md:hidden items-center justify-end gap-5" style={{ gridColumn: 3 }}>
+          {/* ── MOBILE RIGHT ── */}
+          <div className="flex md:hidden items-center justify-end gap-4" style={{ gridColumn: 3 }}>
+            {/* Search */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search products"
+              style={{
+                background: "none",
+                border: "none",
+                color: "var(--color-bone)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: 0,
+              }}
+            >
+              <SearchIcon />
+            </button>
+
             {/* Cart */}
             <Link
               to="/cart"
@@ -465,10 +791,15 @@ export default function Navbar({ isLight = false }) {
       </nav>
 
       {/* ══════════════════════════════════════
+          SEARCH OVERLAY
+          ══════════════════════════════════════ */}
+      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+
+      {/* ══════════════════════════════════════
           MOBILE FULL-SCREEN OVERLAY
           ══════════════════════════════════════ */}
       <div
-        className="fixed inset-0 z-[60] md:hidden flex flex-col"
+        className="fixed inset-0 z-60 md:hidden flex flex-col"
         style={{
           background: "var(--color-void)",
           opacity: menuOpen ? 1 : 0,
