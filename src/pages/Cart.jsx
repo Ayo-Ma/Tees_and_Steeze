@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -243,6 +243,121 @@ function waUrl(number, message) {
 }
 
 /* ══════════════════════════════════════════
+   WHATSAPP RECEIPT TOAST
+   ══════════════════════════════════════════ */
+function ReceiptToast({ onDismiss }) {
+  const [seconds, setSeconds] = useState(20);
+
+  useEffect(() => {
+    if (seconds <= 0) { onDismiss(); return; }
+    const t = setTimeout(() => setSeconds((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [seconds, onDismiss]);
+
+  return (
+    <div
+      role="alertdialog"
+      aria-modal="false"
+      aria-label="Action required"
+      style={{
+        position: "fixed",
+        bottom: "1.25rem",
+        left: "50%",
+        transform: "translateX(-50%)",
+        width: "calc(100% - 2.5rem)",
+        maxWidth: "420px",
+        zIndex: 9999,
+        background: "#111111",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: "1rem",
+        boxShadow: "0 8px 48px rgba(0,0,0,0.75)",
+        overflow: "hidden",
+        animation: "toastSlideUp 360ms cubic-bezier(0.16,1,0.3,1)",
+      }}
+    >
+      {/* countdown bar */}
+      <div style={{ height: "3px", background: "rgba(255,255,255,0.06)" }}>
+        <div
+          style={{
+            height: "100%",
+            width: `${(seconds / 20) * 100}%`,
+            background: "#25D366",
+            transition: "width 1s linear",
+          }}
+        />
+      </div>
+
+      <div style={{ padding: "1.125rem 1.25rem 1.25rem" }}>
+        {/* header row */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "0.75rem", marginBottom: "0.625rem" }}>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9375rem", fontWeight: 700, color: "var(--color-bone)", lineHeight: 1.35, margin: 0 }}>
+            Don't leave just yet — one tap to go.
+          </p>
+          <button
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              flexShrink: 0,
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              border: "none",
+              background: "rgba(255,255,255,0.07)",
+              color: "var(--color-stone)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              padding: 0,
+              marginTop: "2px",
+            }}
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1 1l8 8M9 1l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* body */}
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)", lineHeight: 1.65, margin: "0 0 1rem" }}>
+          Your payment went through — but we won't know to start packing until you tap{" "}
+          <strong style={{ color: "var(--color-bone)", fontWeight: 600 }}>"Notify Tee's & Steeze"</strong>{" "}
+          below. Skip it and your order stays unprocessed. Takes two seconds.
+        </p>
+
+        {/* CTA */}
+        <button
+          onClick={onDismiss}
+          style={{
+            width: "100%",
+            padding: "0.875rem 1rem",
+            background: "#25D366",
+            color: "#FFFFFF",
+            fontFamily: "var(--font-body)",
+            fontSize: "0.875rem",
+            fontWeight: 700,
+            letterSpacing: "-0.01em",
+            border: "none",
+            borderRadius: "9999px",
+            cursor: "pointer",
+            transition: "opacity 180ms ease",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.88")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+        >
+          Got it — I'll tap the button now
+        </button>
+
+        {/* timer */}
+        <p style={{ fontFamily: "var(--font-body)", fontSize: "0.6875rem", color: "var(--color-dim)", textAlign: "center", margin: "0.625rem 0 0" }}>
+          Closing in {seconds}s
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    MAIN CART PAGE
    ══════════════════════════════════════════ */
 export default function Cart() {
@@ -255,6 +370,7 @@ export default function Cart() {
   const [payRef, setPayRef] = useState(null);
   const [businessWa, setBusinessWa] = useState(null);
   const [customerWa, setCustomerWa] = useState(null);
+  const [showToast, setShowToast] = useState(false);
 
   const [form, setForm] = useState({ name: "", email: "", phone: "", address: "", city: "" });
   const [errors, setErrors] = useState({});
@@ -309,6 +425,7 @@ export default function Cart() {
           setCustomerWa(waUrl(form.phone, cMsg));
           clearCart();
           setStep("success");
+          setShowToast(true);
         },
         onClose: () => {},
       });
@@ -416,6 +533,8 @@ export default function Cart() {
             </div>
           </div>
         </main>
+
+        {showToast && <ReceiptToast onDismiss={() => setShowToast(false)} />}
       </>
     );
   }
