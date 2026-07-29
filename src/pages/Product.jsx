@@ -22,18 +22,30 @@ function useReveal(threshold = 0.12) {
 function ProductHero({ product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedColor, setSelectedColor] = useState(null);
   const [sizeGuideOpen, setSizeGuideOpen] = useState(false);
   const { addItem, items, updateQuantity, removeItem } = useCart();
   const settings = useSiteSettings();
 
   const inStock = product.inStock !== false;
+  const hasColors = product.colors?.length > 0;
+  const colorName = selectedColor?.name || null;
 
   const cartItem = selectedSize
-    ? items.find((i) => i.id === product.slug && i.size === selectedSize)
+    ? items.find((i) => i.id === product.slug && i.size === selectedSize && i.color === colorName)
     : null;
 
+  const canAdd = inStock && selectedSize && (!hasColors || selectedColor);
+  const buttonText = !inStock
+    ? "Sold out"
+    : !selectedSize
+      ? "Select a size"
+      : hasColors && !selectedColor
+        ? "Select a color"
+        : "Add to bag";
+
   const handleAddToCart = () => {
-    if (!selectedSize || !inStock) return;
+    if (!canAdd) return;
     addItem(
       {
         id: product.slug,
@@ -43,21 +55,22 @@ function ProductHero({ product }) {
         images: product.images.map((img) => urlFor(img).width(400).url()),
       },
       selectedSize,
+      colorName,
     );
   };
 
   const handleDecrement = () => {
     if (!cartItem) return;
     if (cartItem.quantity <= 1) {
-      removeItem(product.slug, selectedSize);
+      removeItem(product.slug, selectedSize, colorName);
     } else {
-      updateQuantity(product.slug, selectedSize, cartItem.quantity - 1);
+      updateQuantity(product.slug, selectedSize, cartItem.quantity - 1, colorName);
     }
   };
 
   const handleIncrement = () => {
     if (!cartItem) return;
-    updateQuantity(product.slug, selectedSize, cartItem.quantity + 1);
+    updateQuantity(product.slug, selectedSize, cartItem.quantity + 1, colorName);
   };
 
   return (
@@ -219,6 +232,50 @@ function ProductHero({ product }) {
 
               {/* Divider */}
               <div style={{ height: "1px", background: "var(--color-border)", marginBottom: "2rem" }} />
+
+              {/* Color selector */}
+              {hasColors && (
+                <div style={{ marginBottom: "1.75rem" }}>
+                  <span
+                    style={{
+                      display: "block",
+                      fontFamily: "var(--font-body)",
+                      fontSize: "0.6875rem",
+                      fontWeight: 700,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                      color: "var(--color-stone)",
+                      marginBottom: "0.875rem",
+                    }}
+                  >
+                    Color{selectedColor ? `: ${selectedColor.name}` : ""}
+                  </span>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.625rem" }}>
+                    {product.colors.map((color) => (
+                      <button
+                        key={color.name}
+                        onClick={() => setSelectedColor(color)}
+                        aria-label={color.name}
+                        title={color.name}
+                        style={{
+                          width: "1.875rem",
+                          height: "1.875rem",
+                          borderRadius: "50%",
+                          background: color.hex || "#888",
+                          border: "1.5px solid rgba(255,255,255,0.15)",
+                          padding: 0,
+                          cursor: "pointer",
+                          outline: selectedColor?.name === color.name
+                            ? "2px solid var(--color-bone)"
+                            : "2px solid transparent",
+                          outlineOffset: "2px",
+                          transition: "outline-color 150ms ease",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Size selector */}
               <div>
@@ -403,7 +460,7 @@ function ProductHero({ product }) {
                 ) : (
                   <button
                     onClick={handleAddToCart}
-                    disabled={!selectedSize || !inStock}
+                    disabled={!canAdd}
                     style={{
                       width: "100%",
                       fontFamily: "var(--font-body)",
@@ -414,15 +471,13 @@ function ProductHero({ product }) {
                       padding: "1.125rem 2rem",
                       border: "none",
                       borderRadius: "9999px",
-                      background: !selectedSize || !inStock
-                        ? "var(--color-surface-elevated)"
-                        : "var(--color-steeze-pink)",
-                      color: !selectedSize || !inStock ? "var(--color-dim)" : "#FFFFFF",
-                      cursor: !selectedSize || !inStock ? "not-allowed" : "pointer",
+                      background: canAdd ? "var(--color-steeze-pink)" : "var(--color-surface-elevated)",
+                      color: canAdd ? "#FFFFFF" : "var(--color-dim)",
+                      cursor: canAdd ? "pointer" : "not-allowed",
                       transition: "all 200ms ease",
                     }}
                   >
-                    {!inStock ? "Sold out" : !selectedSize ? "Select a size" : "Add to bag"}
+                    {buttonText}
                   </button>
                 )}
 

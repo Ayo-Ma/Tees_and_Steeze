@@ -134,22 +134,24 @@ function CartLine({ item, onQty, onRemove, readonly }) {
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div>
           <p style={{ fontFamily: "var(--font-body)", fontSize: "0.9375rem", fontWeight: 500, color: "var(--color-bone)", lineHeight: 1.3 }}>{item.name}</p>
-          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)", marginTop: "0.2rem" }}>Size {item.size}</p>
+          <p style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)", marginTop: "0.2rem" }}>
+            Size {item.size}{item.color ? ` · ${item.color}` : ""}
+          </p>
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "0.75rem" }}>
           {readonly ? (
             <span style={{ fontFamily: "var(--font-body)", fontSize: "0.8125rem", color: "var(--color-stone)" }}>Qty {item.quantity}</span>
           ) : (
             <div style={{ display: "flex", alignItems: "center", border: "1px solid var(--color-border)" }}>
-              <button onClick={() => item.quantity > 1 && onQty(item.id, item.size, item.quantity - 1)} disabled={item.quantity <= 1} aria-label="Decrease quantity" style={{ width: "32px", height: "32px", background: "none", border: "none", color: item.quantity <= 1 ? "var(--color-dim)" : "var(--color-bone)", cursor: item.quantity <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus /></button>
+              <button onClick={() => item.quantity > 1 && onQty(item.id, item.size, item.quantity - 1, item.color)} disabled={item.quantity <= 1} aria-label="Decrease quantity" style={{ width: "32px", height: "32px", background: "none", border: "none", color: item.quantity <= 1 ? "var(--color-dim)" : "var(--color-bone)", cursor: item.quantity <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Minus /></button>
               <span style={{ width: "34px", height: "32px", fontFamily: "var(--font-body)", fontSize: "0.8125rem", fontWeight: 500, borderLeft: "1px solid var(--color-border)", borderRight: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center" }}>{item.quantity}</span>
-              <button onClick={() => onQty(item.id, item.size, item.quantity + 1)} aria-label="Increase quantity" style={{ width: "32px", height: "32px", background: "none", border: "none", color: "var(--color-bone)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus /></button>
+              <button onClick={() => onQty(item.id, item.size, item.quantity + 1, item.color)} aria-label="Increase quantity" style={{ width: "32px", height: "32px", background: "none", border: "none", color: "var(--color-bone)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}><Plus /></button>
             </div>
           )}
           <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             <span style={{ fontFamily: "var(--font-body)", fontSize: "0.9375rem", fontWeight: 500, color: "var(--color-bone)" }}>₦{(item.price * item.quantity).toLocaleString()}</span>
             {!readonly && (
-              <button onClick={() => onRemove(item.id, item.size)} aria-label={`Remove ${item.name}`} style={{ background: "none", border: "none", color: "var(--color-dim)", cursor: "pointer", display: "flex", padding: "0.25rem", transition: "color 150ms ease" }}
+              <button onClick={() => onRemove(item.id, item.size, item.color)} aria-label={`Remove ${item.name}`} style={{ background: "none", border: "none", color: "var(--color-dim)", cursor: "pointer", display: "flex", padding: "0.25rem", transition: "color 150ms ease" }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "var(--color-danger)")}
                 onMouseLeave={(e) => (e.currentTarget.style.color = "var(--color-dim)")}
               ><Trash /></button>
@@ -205,7 +207,7 @@ function buildBusinessMsg({ form, items, total, ref }) {
     `*Address:* ${form.address}, ${form.city}`,
     ``,
     `*Items:*`,
-    ...items.map((i) => `• ${i.name} (Size ${i.size}) × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`),
+    ...items.map((i) => `• ${i.name} (Size ${i.size}${i.color ? `, ${i.color}` : ""}) × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`),
     ``,
     `*Total paid:* ₦${total.toLocaleString()}`,
     ``,
@@ -222,7 +224,7 @@ function buildCustomerMsg({ form, items, total, ref }) {
     `*Payment Ref:* ${ref}`,
     ``,
     `*Items ordered:*`,
-    ...items.map((i) => `• ${i.name} (Size ${i.size}) × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`),
+    ...items.map((i) => `• ${i.name} (Size ${i.size}${i.color ? `, ${i.color}` : ""}) × ${i.quantity} — ₦${(i.price * i.quantity).toLocaleString()}`),
     ``,
     `*Total paid:* ₦${total.toLocaleString()}`,
     `*Delivery to:* ${form.address}, ${form.city}`,
@@ -285,6 +287,7 @@ export default function Cart() {
           items: items.map((i) => ({
             name: i.name,
             size: i.size,
+            color: i.color || null,
             quantity: i.quantity,
             price: i.price,
           })),

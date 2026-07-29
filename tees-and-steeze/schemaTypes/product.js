@@ -66,6 +66,37 @@ export default {
       validation: (Rule) => Rule.required().min(1),
     },
     {
+      name: 'colors',
+      title: 'Available Colors',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'name',
+              title: 'Color Name',
+              type: 'string',
+              description: 'e.g. "Black", "White", "Vintage Red"',
+            },
+            {
+              name: 'hex',
+              title: 'Hex Code',
+              type: 'string',
+              description: 'e.g. #000000 for black, #FFFFFF for white',
+            },
+          ],
+          preview: {
+            select: { title: 'name', subtitle: 'hex' },
+            prepare({ title, subtitle }) {
+              return { title, subtitle: subtitle || '' }
+            },
+          },
+        },
+      ],
+      description: 'Leave empty if this product only comes in one color.',
+    },
+    {
       name: 'images',
       title: 'Product Images',
       type: 'array',

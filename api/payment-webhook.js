@@ -40,7 +40,7 @@ function buildItemRows(items) {
     .map(
       (i) => `
       <tr>
-        <td style="padding:8px 12px;border-bottom:1px solid #eee;">${i.name} (Size ${i.size})</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #eee;">${i.name} (Size ${i.size}${i.color ? `, ${i.color}` : ""})</td>
         <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:center;">${i.quantity}</td>
         <td style="padding:8px 12px;border-bottom:1px solid #eee;text-align:right;">₦${(i.price * i.quantity).toLocaleString()}</td>
       </tr>`

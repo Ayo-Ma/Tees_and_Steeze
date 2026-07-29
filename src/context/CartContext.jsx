@@ -27,20 +27,19 @@ useEffect(() => {
    * If same product + size already exists, increment quantity.
    * Otherwise, add new line item.
    */
-  const addItem = useCallback((product, size) => {
+  const addItem = useCallback((product, size, color = null) => {
     setItems((prev) => {
       const existing = prev.find(
-        (item) => item.id === product.id && item.size === size,
+        (item) => item.id === product.id && item.size === size && item.color === color,
       );
 
       if (existing) {
         const updatedItems = prev.map((item) =>
-          item.id === product.id && item.size === size
+          item.id === product.id && item.size === size && item.color === color
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
 
-        // ✅ Track add to cart even when increasing existing item quantity
         trackAddToCart(product, size, 1);
 
         return updatedItems;
@@ -53,6 +52,7 @@ useEffect(() => {
         priceFormatted: product.priceFormatted,
         image: product.images[0],
         size,
+        color,
         quantity: 1,
         category: product.category || "Fashion",
       };
@@ -76,14 +76,13 @@ useEffect(() => {
     });
   }, []);
 
-  const removeItem = useCallback((id, size) => {
+  const removeItem = useCallback((id, size, color = null) => {
     setItems((prev) => {
       const itemToRemove = prev.find(
-        (item) => item.id === id && item.size === size,
+        (item) => item.id === id && item.size === size && item.color === color,
       );
 
       if (itemToRemove) {
-        // ✅ Track remove from cart
         trackRemoveFromCart(itemToRemove);
         window.gtag?.("event", "remove_from_cart", {
           currency: "NGN",
@@ -99,16 +98,16 @@ useEffect(() => {
         });
       }
 
-      return prev.filter((item) => !(item.id === id && item.size === size));
+      return prev.filter((item) => !(item.id === id && item.size === size && item.color === color));
     });
   }, []);
 
-  const updateQuantity = useCallback((id, size, quantity) => {
+  const updateQuantity = useCallback((id, size, quantity, color = null) => {
     if (quantity < 1) return;
 
     setItems((prev) =>
       prev.map((item) =>
-        item.id === id && item.size === size ? { ...item, quantity } : item,
+        item.id === id && item.size === size && item.color === color ? { ...item, quantity } : item,
       ),
     );
   }, []);

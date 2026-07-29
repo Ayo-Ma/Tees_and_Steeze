@@ -1,6 +1,5 @@
+/* eslint-disable react-refresh/only-export-components */
 // src/context/SiteSettingsContext.jsx
-// Fetches site settings from Sanity once on app load.
-// Navbar, Footer, and Product pages all pull from here.
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { getSiteSettings } from '../../tees-and-steeze/settings/src/lib/sanity'
@@ -31,32 +30,12 @@ export function SiteSettingsProvider({ children }) {
 
 
   useEffect(() => {
-  getSiteSettings()
-    .then((data) => {
-      console.log('Site settings from Sanity:', data)
-      if (data) {
-        setSettings({  ...data })
-      }
-      setLoaded(true)
-    })
-    .catch((err) => {
-      console.error('Failed to load site settings:', err)
-      setLoaded(true)
-    })
-}, [])
-
-  useEffect(() => {
     getSiteSettings()
       .then((data) => {
-        if (data) {
-          setSettings({  ...data })
-        }
+        if (data) setSettings({ ...data })
         setLoaded(true)
       })
-      .catch((err) => {
-        console.error('Failed to load site settings:', err)
-        setLoaded(true) // still render with defaults
-      })
+      .catch(() => setLoaded(true))
   }, [])
 
   return (

@@ -31,6 +31,7 @@ export async function getAllProducts() {
       price,
       category,
       sizes,
+      colors[] { name, hex },
       images,
       story,
       sizeGuide,
@@ -51,6 +52,7 @@ export async function getFeaturedProducts() {
       "slug": slug.current,
       price,
       category,
+      colors[] { name, hex },
       images
     }
   `)
@@ -66,6 +68,7 @@ export async function getProductBySlug(slug) {
       price,
       category,
       sizes,
+      colors[] { name, hex },
       images,
       story,
       sizeGuide,
