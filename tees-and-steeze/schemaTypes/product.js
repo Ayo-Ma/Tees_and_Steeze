@@ -176,6 +176,12 @@ export default {
       description: 'Turn off when sold out.',
     },
     {
+      name: 'stockQuantity',
+      title: 'Stock Quantity',
+      type: 'number',
+      description: 'How many units are left. When 10 or below, an "Only X left" badge appears on the product page and shop grid.',
+    },
+    {
       name: 'featured',
       title: 'Featured on Homepage',
       type: 'boolean',

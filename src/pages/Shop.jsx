@@ -99,6 +99,14 @@ function ProductCard({ product, index }) {
             </span>
           </div>
         )}
+        {product.inStock !== false && product.stockQuantity != null && product.stockQuantity <= 10 && (
+          <div style={{ position: "absolute", top: "0.625rem", left: "0.625rem", display: "flex", alignItems: "center", gap: "0.3rem", padding: "0.3rem 0.625rem", background: "rgba(10,10,10,0.75)", backdropFilter: "blur(4px)", borderRadius: "9999px" }}>
+            <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "#FB923C", flexShrink: 0 }} />
+            <span style={{ fontFamily: "var(--font-body)", fontSize: "0.625rem", fontWeight: 700, letterSpacing: "0.06em", color: "#FB923C", textTransform: "uppercase" }}>
+              Only {product.stockQuantity} left
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Info */}

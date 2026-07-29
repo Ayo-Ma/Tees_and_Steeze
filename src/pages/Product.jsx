@@ -385,6 +385,25 @@ function ProductHero({ product }) {
                 )}
               </div>
 
+              {/* Low stock badge */}
+              {product.stockQuantity != null && product.stockQuantity <= 10 && inStock && (
+                <div style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.375rem",
+                  marginTop: "1.25rem",
+                  padding: "0.375rem 0.75rem",
+                  background: "rgba(251,146,60,0.12)",
+                  border: "1px solid rgba(251,146,60,0.35)",
+                  borderRadius: "9999px",
+                }}>
+                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#FB923C", flexShrink: 0 }} />
+                  <span style={{ fontFamily: "var(--font-body)", fontSize: "0.75rem", fontWeight: 600, color: "#FB923C", letterSpacing: "0.02em" }}>
+                    Only {product.stockQuantity} left
+                  </span>
+                </div>
+              )}
+
               {/* Add to bag / Qty stepper */}
               <div style={{ marginTop: "1.5rem" }}>
                 {cartItem ? (

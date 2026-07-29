@@ -37,6 +37,7 @@ export async function getAllProducts() {
       sizeGuide,
       customerPhotos,
       inStock,
+      stockQuantity,
       featured,
       order
     }
@@ -53,7 +54,9 @@ export async function getFeaturedProducts() {
       price,
       category,
       colors[] { name, hex },
-      images
+      images,
+      inStock,
+      stockQuantity
     }
   `)
 }
@@ -73,7 +76,8 @@ export async function getProductBySlug(slug) {
       story,
       sizeGuide,
       customerPhotos,
-      inStock
+      inStock,
+      stockQuantity
     }
   `, { slug })
 }
